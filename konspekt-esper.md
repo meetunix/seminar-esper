@@ -230,7 +230,7 @@ ereignisgesteuert sind und die Interaktion durch den Austausch von Ereignissen e
 
 5. 
 
-(Ich glaube, das brauch ich nicht mehr, da ich ja direkt aus ESPER eingehe)o
+(Ich glaube, das brauch ich nicht mehr, da ich ja direkt aus ESPER eingehe)
 
 
 
