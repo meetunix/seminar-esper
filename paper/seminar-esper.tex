@@ -4,6 +4,7 @@
 \usepackage{graphics}
 \usepackage{float}
 \usepackage{colortbl}
+\usepackage{amsmath}
 \hypersetup{
     pdftitle={Complex Event Processing am Beispiel von Esper },
     pdfauthor={Martin Steinbach},
@@ -223,7 +224,7 @@ Ereignissen gesucht, diese werden durch \textbf{\textit{Ereignismuster}} beschri
 Mustererkennung wird nur über einem bestimmtes Zeitintervall des Ereignisstromes 
 ausgeführt und durch Ereignisanfragesprachen definiert. In \cite{bruns} werden drei Arten 
 von Ereignismustern unterschieden. Können Muster ausschließlich durch boolesche 
-Operatoren der Aussagenlogik festgelegt werden, so fallen sie in die Kategorie der 
+Operatoren der Aussagelogik festgelegt werden, so fallen sie in die Kategorie der 
 \textit{einfachen Ereignismuster}. Werden hingegen speziellere Operatoren nötig, um zum 
 Beispiel die Reihenfolge oder Zeitfenster in den Ereignisse auftreten auszudrücken, 
 gehören sie zur Kategorie der \textit{komplexen Ereignismuster}. Zur Kategorie der 
@@ -231,13 +232,20 @@ gehören sie zur Kategorie der \textit{komplexen Ereignismuster}. Zur Kategorie 
 Muster komplexe Ereignisse erzeugt um diese auf einer höheren Abstraktionsebene wieder 
 zur Verfügung zu stellen.\\
 Ein \textbf{\textit{Komplexes Ereignis}} ist eine Menge von Ereignissen, die durch ein 
-Ereignismuster beschrieben sind.\\
+Ereignismuster beschrieben sind.\\\label{begriff-ereignisregel}
 \textbf{\textit{Ereignisregeln}} sind die syntaktische Abstraktion von Ereignismustern 
-und werden mithilfe einer Abfragesprache erstellt.
+und werden mithilfe einer \textbf{\textit{Anfragesprache}} erstellt, laut \cite{bruns} 
+existieren für diese 
+Sprachen kein einheitlicher Standard. Daher existiert eine Fülle an Sprachen, die aber 
+alle einige Eigenschaften Teilen. So bestehen alle in einer Anfragesprache formulierten 
+Regeln aus einer Prämisse und einem Aktionsteil, wenn das Muster, Beziehungsweise die 
+Bedingung in der Prämisse erfüllt ist, wird der Aktionsteil ausgeführt. Anfragesprachen 
+sind grundsätzlich deklarativ, man beschreibt also ein Modell und muss keine Verfahren 
+zur Mustererkennung implementieren. In \cite{eckert} werden auch reaktive Regeln erwähnt, 
+diese Regeln definieren, wie auf komplexe Ereignisse reagiert werden soll.
 
 \subsubsection{Beispielanwendungen}
 \vspace{0.1cm}
-
 
 \textbf{TBD!} wo wird und kann CEP eingesetzt werden\\
 
@@ -247,11 +255,37 @@ und werden mithilfe einer Abfragesprache erstellt.
 %
 \subsection{Anfragesprachen}
 \vspace{0.1cm}
+Mithilfe von Ereignisanfragesprachen lassen sich Daten aus einer Ereignisfolge, eine 
+endliche Menge an Ereignissen innerhalb des endlosen Ereignisstromes, extrahieren, 
+Ereignisse verdichten, zeitliche zusammenhänge herstellen und Reaktionen festlegen.
 
-\subsubsection{Systematik der Anfragesprachen}
-\vspace{0.1cm}
 \subsubsection{Algebren von Anfragesprachen}
 \vspace{0.1cm}
+In diesem Abschnitt wird eine Übersicht über die zur Verfügung stehenden Mengenalgebren 
+in Anfragesprachen gegeben, dabei wird sich auf das Vorgehen in \cite{bruns} berufen.\\
+Seien $A,B,C$ Ereignistypen und $a,b,c$ zugehörige Ereignisinstanzen, wobei gilt 
+$a \in A$, $b \in B$ und $c \in C$. Eine Ereignisfolge wird durch $a_1a_2a_3b_1c_1b_21_4$
+beschrieben.
+
+Jede Ereignisalgebra enthält spezielle Operatoren, die auf Ereignisfolgen angewendet 
+werden können und dabei z.B. zeitliche, kausale oder fachliche Zusammenhänge zwischen 
+Ereignissen beschreiben. In \textbf{\textit{ereignistypbasierten Mustern}} legt der 
+Sequenzoperator die zeitliche Reihenfolge des Auftretens von Ereignistypen fest. Zum 
+Beispiel $A \rightarrow B$. Diese Regel akzeptiert die Ereignisfolge $c_1a_1a_2c_2b_1$. 
+Des Weiteren existieren die boolesche Operatoren $\land , \lor$, die keine Reihenfolge 
+des Auftretens beschreiben, da das Kommutativgesetz gilt: $A \circ B = B \circ A, \circ 
+\in {\lor,\land}$. Ebenso existiert die Negation: $\neg A$. Die Kombination dieser 
+Operatoren ermöglicht es komplexe Muster in Ereignisfolgen zu erkennen.
+
+Eine weitere Algebra, welche von Anfragesprachen implementiert wird, ist die Algebra über 
+\textbf{\textit{Kontextbedingungen}}. Mithilfe dieser Algebra ist es möglich direkt 
+auf Attribute der Ereignisinstanzen über den $.$-Operator zugreifen zu können. Damit 
+besteht die Möglichkeit die Attribute in Relation zu setzen Rechenvorschriften zu 
+definieren. Zur Verfügung stehen dabei die numerischen Operatoren und 
+Vergleichsoperatoren, aber auch Operatoren für Zeichenketten sind denkbar, oder eigens 
+definierte Methoden. 
+
+
 
 %
 % ESPER
