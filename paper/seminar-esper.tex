@@ -5,6 +5,7 @@
 \usepackage{float}
 \usepackage{colortbl}
 \usepackage{amsmath}
+\usepackage{breakurl}
 \hypersetup{
     pdftitle={Complex Event Processing am Beispiel von Esper },
     pdfauthor={Martin Steinbach},
@@ -27,6 +28,7 @@
 %\hyphenation{
  
 %}
+
 \definecolor{shadecolor}{gray}{.92}
 \begin{document}
 
@@ -40,6 +42,8 @@ Martin Steinbach\vspace{0.1cm}\\
        \affaddr{Universität Rostock}\\
        %\affaddr{Rostock, Deustchland}\\
        \email{\footnotesize martin.steinbach@uni-rostock.de}}
+
+
 
 
 \maketitle
@@ -257,9 +261,9 @@ diese Regeln definieren, wie auf komplexe Ereignisse reagiert werden soll.
 \vspace{0.1cm}
 Mithilfe von Ereignisanfragesprachen lassen sich Daten aus einer Ereignisfolge, eine 
 endliche Menge an Ereignissen innerhalb des endlosen Ereignisstromes, extrahieren, 
-Ereignisse verdichten, zeitliche zusammenhänge herstellen und Reaktionen festlegen.
+verdichten, zeitliche zusammenhänge herstellen und Aktionen festlegen.
 
-\subsubsection{Algebren von Anfragesprachen}
+\subsubsection{Definition von Ereignisregeln}
 \vspace{0.1cm}
 In diesem Abschnitt wird eine Übersicht über die zur Verfügung stehenden Mengenalgebren 
 in Anfragesprachen gegeben, dabei wird sich auf das Vorgehen in \cite{bruns} berufen.\\
@@ -281,20 +285,99 @@ auf Attribute der Ereignisinstanzen über den $.$-Operator zugreifen zu können.
 besteht die Möglichkeit die Attribute in Relation zu setzen Rechenvorschriften zu 
 definieren. Zur Verfügung stehen dabei die numerischen Operatoren und 
 Vergleichsoperatoren, aber auch Operatoren für Zeichenketten sind denkbar, oder gesondert 
-definierte Methoden. 
+definierte Methoden. Um in dieser Algebra verschiedene Entitäten von Ereignistypen zu 
+betrachten, ist ein Operator zur Namenssubstitution vorhanden. Dieser Operator weist 
+einem Ereignis eines Ereignistyps einen neuen Namen zu. Dieser binäre Operator könnte zum 
+Beispiel $AS$ lauten. Das folgende Muster würde demnach die Werte des Attributes 
+$humidity$ von einem Ereignis mit dem Ereignistyp $A$ mit einem Ereignis vom 
+nachfolgenden Ereignistyp $B$ auf Gleichheit prüfen.
+$$((A\, AS\, a)) \rightarrow (B\, AS\, b)) \land (a.humidity = b.humidity)$$
+Aufgrund des endlosen Ereignisstromes, können die zuvor beschriebenen Muster nicht auf 
+die ganze Menge der Ereignisse angewendet werden, da diese weder gespeichert werden 
+können, oder nach kurzer Zeit schon nicht mehr von Interesse sind. Daher kommen 
+sogenannte \textbf{\textit{sliding windows}} zum Einsatz. Diese erlauben es, nur einen 
+gewisses Segment des Ereignisstromes für die Mustererkennung zu betrachten. Dabei werden 
+laut \cite{bruns} und \cite{hedtstuck} zwei Fensterarten unterschieden. Das Zeitfenster 
+berücksichtigt alle Ereignisse, die in einem zuvor festgelegtem Zeitraum eintreffen. 
+Betrachtet man hingegen eine maximale Anzahl an Ereignissen innerhalb eines 
+Ereignisstromes, dann spricht man von einem Längenfenster. Abbildung 
+\ref{img:sliding-windows} aus \cite{drools-slide} verdeutlicht diesen Mechanismus. Dabei 
+können die grauen Quader als beliebige Ereignisse oder als Ereignisse die einem 
+Ereignismuster entsprechen verstanden werden.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{img/sliding-windows.png}
+    \caption{sliding windows}
+    \label{img:sliding-windows}
+\end{figure}
 
+Eine beispielhafte Ereignisregel mithilfe von sliding windows könnte folgendermaßen 
+aussehen:
+$$(A \rightarrow B)[win:time:5min] \rightarrow C$$
+Dieses Muster ist erfolgreich, wenn innerhalb eines fünf minütigen Zeitfensters ein 
+Ereignis des Ereignistyps B auf ein Ereignis des Ereignistyps A folgt und anschließend 
+(zeitunabhängig) ein Ereignis vom Ereignistyp C eintritt.\\
+Da es möglich ist mehrere Fensterinstanzen auf einen oder mehrere Ereignisströme parallel 
+anzuwenden, kann mithilfe eines Verschiebefaktors, wie er in \cite{hedtstuck} beschrieben 
+ist, die Schnittmenge zweier aufeinanderfolgender Fenster angegeben werden. Dabei 
+unterscheidet \cite{hedtstuck} nochmals in die \textit{Rolling Windows}, bei denen der 
+Verschiebefaktor kleiner als die Länge des Fensters ist und zwei aufeinanderfolgende 
+Fenster somit eine Schnittmenge besitzen und \textit{Tumbling Windows}, deren 
+Verschiebefaktor größer oder gleich der Fensterlänge ist. Aufeinanderfolgende 
+\textit{Tumbling Windows} sind zueinander Disjunkt und ist der Verschiebefaktor größer 
+als die Fensterlänge, befinden sich zwischen ihnen nicht betrachtete Ereignisse. 
+Abbildung \ref{img:factors} aus \cite{hedtstuck} zeigt den Einfluss des 
+Verschiebefaktors auf aufeinanderfolgender Fensterinstanzen.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{img/factor-hedstuck}
+    \caption{Verschiebefaktor}
+    \label{img:factors}
+\end{figure}
+
+\subsubsection{Definition von Aktionen}
+\vspace{0.1cm}
+Wird ein Ereignismuster erkannt und ist damit die Prämisse einer Ereignisregel erfüllt, 
+muss eine Aktion ausgeführt werden. Eine Aktion kann die Erstellung neuer Ereignisse 
+sein, oder das Ausführen von Diensten, beziehungsweise Versenden von Meldungen.\\
+Werden neue Ereignisse Erzeugt, so ist von der Ereignistransformation die Rede. In 
+\cite{bruns} wird zwischen zwei Transformationen unterschieden. Den Transformationen, die 
+keine Informationen zu einer transformierten Ereignisfolge hinzufügen und diejenigen, die 
+dies tun. So kann im einfachsten Fall ein Ereignis eines gewissen Ereignistyps zu einem 
+anderen Ereignistyp zugeordnet werden. Aktionen in Anfragesprachen erlauben auch die 
+Filterung von Ereignissen. Mit einer gefilterten Menge an relevanten Ereignissen kann 
+eine Leistungssteigerung der Musterkennung erfolgen. Zudem lässt sich eine Menge an 
+Ereignissen zu einem neuen Ereignis zusammenfassen.\\
+Darüber hinaus kann auch der Informationsgehalt von Ereignissen verändert werden, indem 
+man Daten hinzufügt oder entfernt, zum Beispiel im Zuge einer Normalisierung eines 
+Datenformats. Das generieren von komplexen Ereignissen erfolgt über Korrelation mehrerer 
+einfacher Ereignisse, aus denen sich domänenspezifisches Wissen ableiten lässt. Als 
+Beispiel soll die Erkennung einer \textit{BruteForce}-Attacke dienen:
+\begin{align*}
+&CONDITION:\\
+&\quad (FailedLoginAttempt\, AS\, f)[win:time:5min]\\
+&\quad \land\quad f.SourceIP\, =\, ''::1'' \\
+&\quad \land\quad f.sum(count)\, AS\, FailCounter\\
+&\quad \land\quad FaileCounter >= 10\\
+&ACTION:\\
+&\quad create \quad BruteForceAttack(SourceIP = f.SourceIP,\\
+&\quad \quad Time=timestamp())
+\end{align*}
 
 %
 % ESPER
 %
 \subsection{Esper}
 \vspace{0.1cm}
-\subsubsection{Einordnung/Vorstellung  von Esper}
-\vspace{0.1cm}
-\subsubsection{Funktionalität von Esper}
-\vspace{0.1cm}
-\subsubsection{Anfragesprache EPL}
+
+Esper ist eine \textit{Complex Event Processing Engine} und stellt eine Laufzeitumgebung 
+und einen Compiler für die eigene Ereignisanfragesprache \textit{Event Processing 
+Language (EPL)} zur Verfügung. 
+Dieser Übersetzt \textit{EPL} in Bytecode für die \textit{Java Virtual 
+Machine}.
+\subsubsection{Die Anfragesprache EPL}
 \vspace{0.1cm}
 
 %
