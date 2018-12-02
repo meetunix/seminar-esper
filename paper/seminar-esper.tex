@@ -1,4 +1,5 @@
 \documentclass{acm_proc_article-sp}
+\usepackage{minted}
 \usepackage{hyperref}
 \usepackage{ngerman}
 \usepackage{graphics}
@@ -28,6 +29,9 @@
 %\hyphenation{
  
 %}
+
+\usemintedstyle{}
+
 
 \definecolor{shadecolor}{gray}{.92}
 \begin{document}
@@ -263,7 +267,7 @@ Mithilfe von Ereignisanfragesprachen lassen sich Daten aus einer Ereignisfolge, 
 endliche Menge an Ereignissen innerhalb des endlosen Ereignisstromes, extrahieren, 
 verdichten, zeitliche zusammenhänge herstellen und Aktionen festlegen.
 
-\subsubsection{Definition von Ereignisregeln}
+\subsubsection{Definition von Ereignisregeln}\label{kap:ereignisregeln}
 \vspace{0.1cm}
 In diesem Abschnitt wird eine Übersicht über die zur Verfügung stehenden Mengenalgebren 
 in Anfragesprachen gegeben, dabei wird sich auf das Vorgehen in \cite{bruns} berufen.\\
@@ -319,7 +323,8 @@ Dieses Muster ist erfolgreich, wenn innerhalb eines fünf minütigen Zeitfenster
 Ereignis des Ereignistyps B auf ein Ereignis des Ereignistyps A folgt und anschließend 
 (zeitunabhängig) ein Ereignis vom Ereignistyp C eintritt.\\
 Da es möglich ist mehrere Fensterinstanzen auf einen oder mehrere Ereignisströme parallel 
-anzuwenden, kann mithilfe eines Verschiebefaktors, wie er in \cite{hedtstuck} beschrieben 
+anzuwenden, kann mithilfe eines \textbf{Verschiebefaktors}\label{kap:verschiebefaktor}, 
+wie er in \cite{hedtstuck} beschrieben 
 ist, die Schnittmenge zweier aufeinanderfolgender Fenster angegeben werden. Dabei 
 unterscheidet \cite{hedtstuck} nochmals in die \textit{Rolling Windows}, bei denen der 
 Verschiebefaktor kleiner als die Länge des Fensters ist und zwei aufeinanderfolgende 
@@ -374,11 +379,210 @@ Beispiel soll die Erkennung einer \textit{BruteForce}-Attacke dienen:
 
 Esper ist eine \textit{Complex Event Processing Engine} und stellt eine Laufzeitumgebung 
 und einen Compiler für die eigene Ereignisanfragesprache \textit{Event Processing 
-Language (EPL)} zur Verfügung. 
-Dieser Übersetzt \textit{EPL} in Bytecode für die \textit{Java Virtual 
-Machine}.
+Language (EPL)} zur Verfügung. Der Compiler Übersetzt \textit{EPL} in Bytecode für die 
+\textit{Java Virtual Machine}. Esper ist ebenfalls in der Programmiersprache Java 
+implementiert, mit Nesper existiert allerdings auch eine Implementierung in C\#. Da nicht 
+auf einer endlichen Menge an Daten nach Mustern gesucht wird, lässt sich Esper eher als 
+eine invertierte Datenbank verstehen. Als erstes teilt man dem Compiler mithilfe einer 
+zuvor erstellten Konfiguration das Event-Schema mit, um ihm anschließend ein 
+EPL-Statement zur Übersetzung zur Verfügung zu stellen (Abbildung \ref{java:01}). 
+
+\begin{figure}[h]    
+\begin{minted}[mathescape,bgcolor=shadecolor]{java}
+EPCompiler c = EPCompilerProvider.getCompiler();
+Configuration conf = new Configuration();
+conf.getCommon().addEventType(PersonEvent.class);
+
+CompilerArguments cargs = 
+    new CompilerArguments(conf);
+EPCompiled epCompiled;
+epCompiled = c.compile("@name('statement')
+    select name, age from PersonEvent
+    where (age/5) > 5", cargs);
+\end{minted}
+\caption{Initialisierung des Compilers}
+\label{java:01}
+\end{figure}
+
+Die Laufzeitumgebung verwendet dann das zuvor übersetzte Statement und wendet es auf 
+einen Ereignisstrom an. Ereignisse sind in diesem Fall Objektinstanzen der Klasse 
+PersonEvent. Ein \textit{Listener} kann die zutreffenden Resultate verarbeiten. In 
+diesem Beispiel (Abbildung \ref{java:02}) aus \cite{esper-reference} werden die 
+Ereignisparameter \textit{name} und \textit{age} ausgegeben.
+
+\begin{figure}[h]    
+\begin{minted}[mathescape,bgcolor=shadecolor]{java}
+EPRuntime rt =
+    EPRuntimeProvider.getDefaultRuntime(conf);
+    
+EPDeployment deployment;
+deployment =
+    rt.getDeploymentService().deploy(epCompiled);
+    
+EPStatement statement =         
+    rt.getDeploymentService().getStatement(
+        deployment.getDeploymentId(),"statement");
+        
+statement.addListener(new UpdateListener() {
+public void update(EventBean[] newData,
+    EventBean[] oldData, EPStatement statement,
+    EPRuntime rt) {
+    
+    String name = (String) newData[0].get("name");
+    int age = (int) newData[0].get("age");
+    System.out.println(
+        String.format("Name: %s,
+            Age: %d",name, age));
+}});
+\end{minted}
+    \caption{Initialisierung der Laufzeitumgebung}
+    \label{java:02}
+\end{figure}
+
+Um an die Esper-Laufzeitumgebung Ereignisse zu senden, müssen neue Ereignisinstanzen 
+Erzeugt werden und an die Laufzeitumgebung gesendet werden, wie in Abbildung \ref{java:03}
+gezeigt
+
+\begin{figure}[h]    
+\begin{minted}[mathescape,bgcolor=shadecolor]{java}
+for (int i = 0; i <= 100; i++) {
+runtime.getEventService().sendEventBean(
+    new PersonEvent("Peter", i), "PersonEvent");
+}
+\end{minted}
+\caption{Senden von Ereignissen}
+\label{java:03}
+\end{figure}
+
 \subsubsection{Die Anfragesprache EPL}
 \vspace{0.1cm}
+Die \textit{Event Processing Language} von Esper ist stark an \textit{SQL} angelehnt, 
+bietet aber Erweiterungen für die Verarbeitung von Ereignissen in einem endlosen 
+Ereignisstrom. Ähnlich wie bei SQL ist ein statement folgendermaßen aufgebaut:
+
+\texttt{select DATENAUSWAHL from EREIGNISSTROM where FILTER}
+
+Um Anfragen an einen Ereignisstrom zu validieren, bietet der Entwickler von Esper, 
+EsperTech Inc., das Werkezug EPL-Online (\cite{epl-online}) an. Basierend auf den 
+Voreinstellungen in \cite{epl-online} werden die nachfolgenden Beispielanfragen an den 
+Ereignisstrom \texttt{StockTick} gerichtet. Der Zuegörige Ereignistyp wurde zuvor durch 
+das folgende EPL-statement definiert. Die neuen Erzeugten Ereignisse werden durch einen 
+\textit{Listener} entgegengenommen und sind als Ausgabe verfügbar.
+
+\texttt{create schema StockTick(symbol string, price double);}
+
+Die verwendeten Datentypen sind stark an die primitiven Datentypen der Programmiersprache 
+Java angelehnt (\texttt{boolean, integer, long, double, float, byte}). Es existiert aber 
+auch der Datentyp \texttt{string}, für die Speicherung von unbegrenzt großen 
+Zeichenketten.
+
+Für die Beispiele wird ein Ereignisstrom verwendet, der diesem Schema 
+entspricht.
+
+\begin{verbatim}
+StockTick={symbol='YHOO', price=65}
+StockTick={symbol='IBM', price=141}
+t=t.plus(2 seconds)
+StockTick={symbol='IBM', price=142}
+StockTick={symbol='YHOO', price=62}
+t=t.plus(2 seconds)
+StockTick={symbol='IBM', price=146}
+StockTick={symbol='YHOO', price=63}
+t=t.plus(2 seconds)
+StockTick={symbol='YHOO', price=64}
+StockTick={symbol='IBM', price=147}
+t=t.plus(6 seconds)
+\end{verbatim}
+
+Die Variable \texttt{t} symbolisiert dabei die vergangene Zeit zwischen dem Eintreten von 
+Ereignissen. Dabei sind \texttt{t = t+2000} und \texttt{t=t.plus(2 seconds)} äquivalente 
+Ausdrücke. 
+
+Das einfachste Muster, dass mithilfe von EPL beschrieben werden kann, ist die Filterung 
+aller Ereignisse.
+
+\texttt{select * from StockTick();}
+
+Einfache Bedingungen lassen sich mit \texttt{where} realisieren. 
+
+\texttt{select * from StockTick() where price > 100;}
+
+Eine Aggregation über alle Events kann mittels vordefinierter Funktionen erfolgen. EPL 
+stehen neben den einfachen Funktionen wie \texttt{avg(), count(), sum()} auch 
+statistische Methoden zur Verfügung (siehe Tabelle 10.5 in \cite{esper-reference}).
+
+Die nächste Anfrage zählt die Anzahl aller Ereignisse und bildet den Durchschnitt über 
+alle Kurspreise der IBM-Aktie.
+
+\texttt{select  count(*),avg(price) from StockTick()\\where symbol='IBM'}
+
+Die zuvor gezeigten Beispiele eignen sich nicht zur Anfrage auf einen endlosen 
+Ereignisstrom, da alle Ereignisse angefragt werden. Ein endgültiges Ergebnis würde ein 
+Ende des Ereignisstromes voraussetzen, daher finden im Rahmen von \textit{CEP} die in 
+Kapitel \ref{kap:ereignisregeln} beschriebenen Fenster Verwendung. Die anschließende 
+EPL-Anfrage setzt ein auf Zeit basierendes \textit{sliding window} ein und berechnet den 
+Durchschnittspreis der IBM-Aktie der letzten 6 Sekunden:
+
+\texttt{select  avg(price) from StockTick().win:time(6 sec)\\where symbol='IBM'}
+
+Da es sich hierbei um ein normales Fenster ohne expliziten Verschiebefaktor handelt 
+(siehe auch Abschnitt \ref{kap:verschiebefaktor}), werden insgesamt 8 Ergebnisse 
+ausgegeben. Trifft ein Muster auf ein Ereignis zu, so bekommt dieses Ereignis eine 
+Gültigkeitsdauer zugeordnet, es ist damit in das Fenster aufgenommen wurden. Läuft die 
+Gültigkeitsdauer ab, so wird das Ereignis aus dem Fenster entfernt. Folgende Übersicht 
+soll die Funktion der einfachen Fenster in Esper verdeutlichen. Dabei wird sich auf den 
+oben eingeführten Ereignisstrom und die letzte Anfrage bezogen.
+
+\begin{table}[ht]
+    \caption{Fenster ohne Verschiebefaktor}
+    \label{table:ereignis}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|l|c|c|c|l|}
+            \hline
+            \cellcolor{shadecolor}\#   &\cellcolor{shadecolor} 2 Sek.    
+            &\cellcolor{shadecolor} 4 Sek.    &\cellcolor{shadecolor} 6 Sek. & 
+            \cellcolor{shadecolor}avg \\  
+            \hline
+            1   &       &        &(141)         &   141\\
+            2   &       &(141)   &(142)         &   141.5\\
+            3   &(141)  &(142)   &(146)         &   143\\
+            4   &(142)  &(146)   &              &   144\\
+            5   &(142)  &(146)   &(147)         &   145\\
+            6   &(146)  &(147)   &              &   146.5\\
+            7   &(147)  &        &              &   147\\
+            8   &       &        &              &   NULL\\ 
+        \hline   
+        \end{tabular} 
+    }
+\end{table}
+
+Da dieses Vorgehen wenig Intuitiv erscheint existieren in EPL auch Längen- und 
+Zeitfenster mit einem Verschiebefaktor. Die sogenannten \texttt{batch}-Fenster sind 
+\textit{Tumbling Windows}, deren Verschiebefaktor der Länge der Fenster entspricht. Die 
+gleiche Anfrage mithilfe eines \texttt{batch}-Fensters verhält sich folgendermaßen.
+
+\texttt{select  avg(price) from StockTick().win:time\_batch(6 sec)where symbol='IBM'}
+\newpage
+\begin{table}[ht]
+    \caption{\texttt{batch}-Fenster}
+    \label{table:ereignis}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|l|c|c|c|l|}
+            \hline
+            \cellcolor{shadecolor}\#   &\cellcolor{shadecolor} 2 Sek.    
+            &\cellcolor{shadecolor} 4 Sek.    &\cellcolor{shadecolor} 6 Sek. & 
+            \cellcolor{shadecolor}avg \\  
+            \hline
+            1   &(141)       &(142) &(146)  &   143\\
+            2   &(147)       &      &       &   147\\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
+
+
 
 %
 % Problembeispiel
