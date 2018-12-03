@@ -1,0 +1,17 @@
+//create context Batch4Seconds start @now end after 4 sec;
+
+
+//@Name('A') select * from StockTick() where symbol = "IBM";
+//@Name('B') select * from StockTick() where symbol = "RHAT";
+
+//@Name('Out')  select  avg(price) from StockTick() where symbol="IBM" and //price > 146;
+
+
+Ereignistypbaserte Anfragen
+
+select a,b from pattern[a=StockTick(symbol="IBM") -> b=StockTick(symbol="RHAT")];
+
+
+Ereignistypbaserte Anfragen mit Kontextbedingung
+
+select a,b from pattern[a=StockTick(symbol="IBM") -> b=StockTick(symbol="RHAT")];

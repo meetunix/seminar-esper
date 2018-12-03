@@ -34,6 +34,9 @@
 
 
 \definecolor{shadecolor}{gray}{.92}
+\hyphenation{pattern}
+
+
 \begin{document}
 
 
@@ -454,7 +457,7 @@ runtime.getEventService().sendEventBean(
 \label{java:03}
 \end{figure}
 
-\subsubsection{Die Anfragesprache EPL}
+\subsection{Die Anfragesprache EPL}
 \vspace{0.1cm}
 Die \textit{Event Processing Language} von Esper ist stark an \textit{SQL} angelehnt, 
 bietet aber Erweiterungen für die Verarbeitung von Ereignissen in einem endlosen 
@@ -503,9 +506,15 @@ aller Ereignisse.
 
 \texttt{select * from StockTick();}
 
-Einfache Bedingungen lassen sich mit \texttt{where} realisieren. 
+Einfache Bedingungen lassen sich mit \texttt{where} realisieren. Zusätzlich lässt Esper 
+noch eine weitere Schreibweise für Bedingungen zu, diese Schreibweise ist äquivalent zur 
+ersten, erhöht jedoch die Lesbarkeit in den später behandelten ereignistypbasierenden 
+Mustern.
 
-\texttt{select * from StockTick() where price > 100;}
+\texttt{select * from StockTick() where price > 100;}\\
+\texttt{select * from StockTick(price > 100);}
+
+
 
 Eine Aggregation über alle Events kann mittels vordefinierter Funktionen erfolgen. EPL 
 stehen neben den einfachen Funktionen wie \texttt{avg(), count(), sum()} auch 
@@ -525,64 +534,135 @@ Durchschnittspreis der IBM-Aktie der letzten 6 Sekunden:
 
 \texttt{select  avg(price) from StockTick().win:time(6 sec)\\where symbol='IBM'}
 
-Da es sich hierbei um ein normales Fenster ohne expliziten Verschiebefaktor handelt 
+Da es sich hierbei um ein normales Zeitfenster ohne expliziten Verschiebefaktor handelt 
 (siehe auch Abschnitt \ref{kap:verschiebefaktor}), werden insgesamt 8 Ergebnisse 
 ausgegeben. Trifft ein Muster auf ein Ereignis zu, so bekommt dieses Ereignis eine 
 Gültigkeitsdauer zugeordnet, es ist damit in das Fenster aufgenommen wurden. Läuft die 
-Gültigkeitsdauer ab, so wird das Ereignis aus dem Fenster entfernt. Folgende Übersicht 
-soll die Funktion der einfachen Fenster in Esper verdeutlichen. Dabei wird sich auf den 
-oben eingeführten Ereignisstrom und die letzte Anfrage bezogen.
+Gültigkeitsdauer ab, so wird das Ereignis aus dem Fenster entfernt. Tabelle 
+\ref{table:ereignis} soll die Funktion der einfachen Zeitfenster in Esper verdeutlichen. 
+Dabei wird sich auf den oben eingeführten Ereignisstrom und die letzte Anfrage bezogen.
 
 \begin{table}[ht]
     \caption{Fenster ohne Verschiebefaktor}
     \label{table:ereignis}\vspace{0.2cm}
     \centering{
         \renewcommand{\arraystretch}{1.3}
-        \begin{tabular}{|l|c|c|c|l|}
+        \begin{tabular}{|c|c|c|c|l|}
             \hline
-            \cellcolor{shadecolor}\#   &\cellcolor{shadecolor} 2 Sek.    
+            \cellcolor{shadecolor}Fenster   &\cellcolor{shadecolor} 2 Sek.    
             &\cellcolor{shadecolor} 4 Sek.    &\cellcolor{shadecolor} 6 Sek. & 
-            \cellcolor{shadecolor}avg \\  
+            \cellcolor{shadecolor}callback\\  
             \hline
-            1   &       &        &(141)         &   141\\
-            2   &       &(141)   &(142)         &   141.5\\
-            3   &(141)  &(142)   &(146)         &   143\\
-            4   &(142)  &(146)   &              &   144\\
-            5   &(142)  &(146)   &(147)         &   145\\
-            6   &(146)  &(147)   &              &   146.5\\
-            7   &(147)  &        &              &   147\\
-            8   &       &        &              &   NULL\\ 
+            1   &       &        &\textbf{141},65         &   141\\
+            2   &       &\textbf{141},65   &\textbf{142},64         &   141.5\\
+            3   &\textbf{141},65  &\textbf{142},62   &\textbf{146},63         &   143\\
+            4   &\textbf{142},62  &\textbf{146},63   &              &   144\\
+            5   &\textbf{142},62  &\textbf{146},63   &\textbf{147},64         &   145\\
+            6   &\textbf{146},63  &\textbf{147},64   &              &   146.5\\
+            7   &\textbf{147},64  &        &              &   147\\
         \hline   
         \end{tabular} 
     }
 \end{table}
 
 Da dieses Vorgehen wenig Intuitiv erscheint existieren in EPL auch Längen- und 
-Zeitfenster mit einem Verschiebefaktor. Die sogenannten \texttt{batch}-Fenster sind 
-\textit{Tumbling Windows}, deren Verschiebefaktor der Länge der Fenster entspricht. Die 
-gleiche Anfrage mithilfe eines \texttt{batch}-Fensters verhält sich folgendermaßen.
+Zeitfenster mit einem fixen Verschiebefaktor. Die sogenannten \texttt{batch}-Fenster sind 
+\textit{Tumbling Windows}, deren Verschiebefaktor der Länge des jeweiligen Fensters 
+entspricht. Die gleiche Anfrage mithilfe eines \texttt{batch}-Fensters verhält sich 
+folgendermaßen.
 
 \texttt{select  avg(price) from StockTick().win:time\_batch(6 sec)where symbol='IBM'}
 \newpage
 \begin{table}[ht]
     \caption{\texttt{batch}-Fenster}
-    \label{table:ereignis}\vspace{0.2cm}
+    \label{table:ereignis-batch}\vspace{0.2cm}
     \centering{
         \renewcommand{\arraystretch}{1.3}
-        \begin{tabular}{|l|c|c|c|l|}
+        \begin{tabular}{|c|c|l|}
             \hline
-            \cellcolor{shadecolor}\#   &\cellcolor{shadecolor} 2 Sek.    
-            &\cellcolor{shadecolor} 4 Sek.    &\cellcolor{shadecolor} 6 Sek. & 
-            \cellcolor{shadecolor}avg \\  
+            \cellcolor{shadecolor}Fenster   &\cellcolor{shadecolor} 6 Sek.& 
+            \cellcolor{shadecolor}callback\\  
             \hline
-            1   &(141)       &(142) &(146)  &   143\\
-            2   &(147)       &      &       &   147\\
+            1   &65, \textbf{141}, \textbf{142}, 62, \textbf{146}, 63 &   143\\
+            2   &64,\textbf{147}       &    147\\
             \hline   
         \end{tabular} 
     }
 \end{table}
 
+Anfragen mithilfe von einfachen Längenfenstern lassen sich ebenso leicht definieren und 
+verhalten sich genauso wie eine Warteschlange. Es werden nur Ereignisse innerhalb des 
+Längenfensters betrachtet, die dem Filter hinter der \texttt{where}-Anweisung 
+entsprechen. Dabei werden durch Esper immer dann Aktionen ausgelöst, die als sogenannte 
+\textit{callbacks} an den \textit{Listener} gesendet werden, wenn ein relevantes Ereignis 
+das Fenster betritt oder verlässt. Die Folgende Tabelle \ref{table:warteschlange} 
+demonstriert dieses Vorgehen.
 
+\texttt{select avg(price) from StockTick().win:length(4)\\where symbol='IBM'}
+
+\begin{table}[ht]
+    \caption{Längenfenster}
+    \label{table:warteschlange}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|c|c|c|c|l|}
+            \hline
+            \cellcolor{shadecolor}Fenster   &\cellcolor{shadecolor} 1    
+            &\cellcolor{shadecolor} 2    &\cellcolor{shadecolor} 3 & 
+            \cellcolor{shadecolor}4 &\cellcolor{shadecolor}callback\\  
+            \hline
+            1   &65 & & & &- \\
+            2   &\textbf{141} &65 & & &141 \\
+            3   &\textbf{142} &\textbf{141} &65 & &141.5 \\
+            4   &62 &\textbf{142} &\textbf{141} &65 &- \\
+            5   &\textbf{146} &62 &\textbf{142} &\textbf{141} &143 \\
+            6   &63 &\textbf{146} &62 &\textbf{142} &144 \\
+            7   &64 &63 &\textbf{146} &62 &146 \\
+            8   &\textbf{147} &64 &63 &\textbf{146} &146.5 \\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
+
+Aufeinanderfolgende \texttt{batch}-Längenfenster überschneiden sich hingegen nicht.
+
+\texttt{select  avg(price) from StockTick().win:length\_batch(4)\\where symbol='IBM'}
+\begin{table}[ht]
+    \caption{\texttt{batch}-Längenfenster}
+    \label{table:warteschlange-batch}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|c|c|c|c|l|}
+            \hline
+            \cellcolor{shadecolor}Fenster   &\cellcolor{shadecolor} 1    
+            &\cellcolor{shadecolor} 2    &\cellcolor{shadecolor} 3 & 
+            \cellcolor{shadecolor}4 &\cellcolor{shadecolor}callback\\  
+            \hline
+            1   &65 &\textbf{141} &\textbf{142} &62 &141.5 \\
+            2   &\textbf{146} &63 &64 &\textbf{147} &146.5 \\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
+
+Möchte man mehrere Bedingungen an ein Ereignis stellen, können diese mithilfe 
+aussagenlogischer Operatoren beschrieben werden. Die sich anschließende Anfrage ermittelt 
+aus jeweils vier Datensätzen, diejenige Kursaktualisierung, die IBM betrifft und den Kurs 
+unter einen Wert von 144 fallen lässt.
+
+\texttt{select * from StockTick().win:length\_batch(4)\\where symbol='IBM' and 
+price < 144}
+
+Um die in Sektion \ref{kap:ereignisregeln} erwähnten ereignistypbasierten Muster in EPL 
+zu verwenden existiert das Schlüsselwort \texttt{pattern[]}.
+
+%TBD
+% einfache ereignistypbasierte Anfragen
+% consumption modes
+% -> Operator
+% -> Operator mit Fenstern
+% -> Operator mit Kontextbedingungen
+% -> Beispiel SocialMedia hat Einfluss auf Aktienkurs?
 
 %
 % Problembeispiel

@@ -9,56 +9,29 @@ StockTick={symbol='YHOO', price=63}
 t=t.plus(2 seconds)
 StockTick={symbol='YHOO', price=64}
 StockTick={symbol='IBM', price=147}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=66}
-StockTick={symbol='IBM', price=121}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=67}
+t=t.plus(6 seconds)
+
+
+
+
+StockTick={symbol='YHOO', price=65}
 StockTick={symbol='IBM', price=141}
 t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=68}
-StockTick={symbol='IBM', price=118}
+StockTick={symbol='IBM', price=142}
+StockTick={symbol='YHOO', price=62}
 t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=69}
-StockTick={symbol='IBM', price=110}
+StockTick={symbol='IBM', price=146}
+NewsTick={symbol="IBM",message="good"}
+StockTick={symbol='YHOO', price=63}
 t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=70}
-StockTick={symbol='IBM', price=101}
-t=t.plus(2 seconds)
+StockTick={symbol='YHOO', price=64}
+StockTick={symbol='IBM', price=147}
+t=t.plus(6 seconds)
 StockTick={symbol='YHOO', price=71}
-StockTick={symbol='IBM', price=91}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=61}
-StockTick={symbol='IBM', price=82}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=41}
-StockTick={symbol='IBM', price=95}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=51}
-StockTick={symbol='IBM', price=99}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=61}
-StockTick={symbol='IBM', price=103}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=65}
-StockTick={symbol='IBM', price=103}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=63}
-StockTick={symbol='IBM', price=103}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=63}
-StockTick={symbol='IBM', price=103}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=63}
-StockTick={symbol='IBM', price=103}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=68}
-StockTick={symbol='IBM', price=103}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=68}
-StockTick={symbol='IBM', price=103}
-t=t.plus(2 seconds)
-StockTick={symbol='YHOO', price=68}
-StockTick={symbol='IBM', price=131}
-
+StockTick={symbol='IBM', price=150}
+StockTick={symbol='RHAT', price=95}
+NewsTick={symbol="IBM",message="bad"}
+t=t.plus(6 seconds)
+StockTick={symbol='YHOO', price=77}
+StockTick={symbol='IBM', price=107}
 
