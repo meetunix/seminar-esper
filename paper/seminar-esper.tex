@@ -61,21 +61,7 @@ Martin Steinbach\vspace{0.1cm}\\
     \item steige steigerung der Datenmengen -> keine speicherung möglich
     \item kostengünstige Sensortechnik 
 \end{itemize}
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
+
 \end{abstract}
 
 %\terms{Theory}
@@ -107,12 +93,13 @@ Softwarelösungen zur systematischen Analyse von massiven Datenströmen. Eine di
 sogenannten \textit{CEP-Engines} ist Esper, laut \cite{fraunhofer} besitzt Esper eine 
 sehr große Verbreitung, wird im kommerziellen Umfeld von Namhaften Unternehmen 
 verwendet und weist keinen Fokus auf eine spezielle Art der Verwendung auf. Esper ist 
-freie Software\footnote{General Public License v2} und steht damit jedermann für jeden 
+freie Software\footnote{General Public License v2} und steht damit der Gemeinheit für 
+jeden 
 Zweck zur Verfügung.\\
-Neben der Funktionalität die Esper bereit stellt, einer Erklärung der Esper-eigenen 
-Abfragesprache \textit{EPL} und einer Beispielanalyse, werden zuvor die Grundlagen 
-von \textit{Complex Event Processing} erläutert. Darunter fällt die Klärung essentieller 
-Begriffe, eine Einordnung von \text{CEP} und die Erklärung von Abfragesystematiken.
+Neben der Erklärung der Esper-eigenen Abfragesprache \textit{EPL}, werden zuvor die 
+Grundlagen von \textit{Complex Event Processing} erläutert. Darunter fällt die Klärung 
+essentieller Begriffe, eine Einordnung von \text{CEP} und die Erklärung von 
+Abfragesystematiken.
 
 %
 % Hauptteil
@@ -120,14 +107,22 @@ Begriffe, eine Einordnung von \text{CEP} und die Erklärung von Abfragesystemati
 
 \section{CEP am Beispiel von Esper}
 \vspace{0.1cm}
-\textbf{TBD: Inhaltangabe}
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
-lorem ipsum lorem ipsum loren ipsum lorem ipsum lorem \\
 
-\subsection{Einordnung von CEP}
+Um die Mechanismen der Anfragesprache \textit{EPL} zu verstehen, muss zuvor im Abschnitt 
+\ref{kap:einordnung} die Frage 
+geklärt werden wie sich \textit{Complex Event Processing} eigentlich charakterisieren 
+lässt und wie es in das System der Datenverarbeitung eingegliedert werden kann. Darüber 
+hinaus werden in diesem Abschnitt auch grundlegende Begriffe des \textit{CEP}-Kontext 
+geklärt. Abschnitt \ref{kap:anfragesprachen} befasst sich mit allgemein gültigen Aussagen 
+zu Anfragesprachen und stellt geläufige Anfragealgebren vor. Der sich anschließende 
+Abschnitt \ref{kap:esper} stellt die Funktionsweise von Esper aus Sicht eines Nutzers dar 
+und listet in einem kurzen Quellcodefragment, das Vorgehen um Esper in Betrieb nehmen zu 
+können. Der ausführlichste Teil, Abschnitt \ref{kap:epl}, zeigt beispielhaft anhand eines 
+gegebenem Ereignisstromes, wie sich die Theorie der vorherigen Abschnitte in 
+\textit{EPL} realisieren lässt.
+
+
+\subsection{Einordnung von CEP}\label{kap:einordnung}
 \vspace{0.1cm}
 \textit{CEP} kann als Bestandteil von \textit{Event-Driven Architecture (EDA)} verstanden 
 werden. \textit{EDA} unterscheidet sich als Architekturstil 
@@ -258,13 +253,26 @@ diese Regeln definieren, wie auf komplexe Ereignisse reagiert werden soll.
 \subsubsection{Beispielanwendungen}
 \vspace{0.1cm}
 
-\textbf{TBD!} wo wird und kann CEP eingesetzt werden\\
+\textit{CEP} kommt überall dort zum Einsatz wo Daten möglichst in Echtzeit analysiert 
+werden sollen um Erkenntnisgewinn zu erlangen. Die Finanzbranche ist sicherlich einer der 
+größten Sektoren in dem \texttt{CEP} zum Einsatz kommt. Dabei muss es sich nicht um 
+zeitnahe Analysen der Marktsituation oder automatisierten Handel handeln, auch die 
+Erkennung von 
+Kreditkartenmissbrauch wird mittels \textit{CEP} automatisiert. \textit{CEP} wird auch 
+zur Überwachung von Industrieanlagen und im Automobilbereich eingesetzt um schnell die 
+Informationen einer Vielzahl von Sensoren zu interpretieren. Auch das CERN wäre ohne 
+\textit{CEP} nicht in der Lage die Daten der verschiedenen Detektoren am LHC auszuwerten, 
+denn eine Speicherung der Daten zur späteren Analyse ist aufgrund der Menge unmöglich.\\
+Zu Erwähnen ist auch die \textit{DEBS}-Konferenz\footnote{Ditributet Event Based Systems: 
+\url{http://debs.org/debs-conferences/}} und deren \textit{Grand Challenges}, ein seit 
+2010, jährlich veröffentlichtes Problem was auf Basis einer riesigen Datenmenge zu lösen 
+ist.
 
 
 %
 % Anfragesprachen
 %
-\subsection{Anfragesprachen}
+\subsection{Anfragesprachen}\label{kap:anfragesprachen}
 \vspace{0.1cm}
 Mithilfe von Ereignisanfragesprachen lassen sich Daten aus einer Ereignisfolge, eine 
 endliche Menge an Ereignissen innerhalb des endlosen Ereignisstromes, extrahieren, 
@@ -377,7 +385,7 @@ Beispiel soll die Erkennung einer \textit{BruteForce}-Attacke dienen:
 %
 % ESPER
 %
-\subsection{Esper}
+\subsection{Esper}\label{kap:esper} 
 \vspace{0.1cm}
 
 Esper ist eine \textit{Complex Event Processing Engine} und stellt eine Laufzeitumgebung 
@@ -457,7 +465,7 @@ runtime.getEventService().sendEventBean(
 \label{java:03}
 \end{figure}
 
-\subsection{Die Anfragesprache EPL}
+\subsection{Die Anfragesprache EPL}\label{kap:epl}
 \vspace{0.1cm}
 Die \textit{Event Processing Language} von Esper ist stark an \textit{SQL} angelehnt, 
 bietet aber Erweiterungen für die Verarbeitung von Ereignissen in einem endlosen 
@@ -572,7 +580,7 @@ entspricht. Die gleiche Anfrage mithilfe eines \texttt{batch}-Fensters verhält 
 folgendermaßen.
 
 \texttt{select  avg(price) from StockTick().win:time\_batch(6 sec)where symbol='IBM'}
-\newpage
+
 \begin{table}[ht]
     \caption{\texttt{batch}-Fenster}
     \label{table:ereignis-batch}\vspace{0.2cm}
@@ -676,7 +684,6 @@ StockTick={symbol='IBM', price=147}
 t=t.plus(6 seconds)
 StockTick={symbol='YHOO', price=71}
 StockTick={symbol='IBM', price=150}
-StockTick={symbol='RHAT', price=95}
 NewsTick={symbol="IBM",message="bad"}
 t=t.plus(6 seconds)
 StockTick={symbol='YHOO', price=77}
@@ -802,7 +809,7 @@ Detektorereignisse, wie in Tabelle \ref{table:cont2} abgebildet. Er wird im Folg
         \end{tabular} 
     }
 \end{table}
-\newpage
+
 Der letztmögliche, durch den Operator \texttt{every}, darstellbare Modus eignet sich für 
 Mustererkennungen von hochfrequent eintretenden 
 Ereignissen, welche auch mehrfach vorkommen können. Durch das erste Initiatorereignis 
@@ -847,13 +854,42 @@ Nachrichtenmeldung den Aktienkurs der IBM-AKtie nachteilig beeinflusst.
 
 \texttt{select c from pattern[a=StockTick(symbol='IBM') ->\\
     b=NewsTick(symbol='IBM' and message='bad') ->\\
-    c=StockTick(symbol='IBM' and\\ price < a.price)].win:time\_batch(30sec);}
+    c=StockTick(symbol='IBM' and\\ price < a.price)].win:time\_batch(5 min);}
 
-In diesem Beispiel wird neben einer kontextabhängigen Bedingung (\texttt{proce < 
-a.price}), auch nur ein Zeitraum von 30 Sekunden betrachtet.
+In diesem Beispiel wird neben einer kontextabhängigen Bedingung (\texttt{price < 
+a.price}), welche den Preis des zweiten Detektorereignisses mit dem Preis des 
+Initiatorereignisses vergleicht. Das eingesetzte Zeitfenster schränkt den zu 
+betrachtenden Zeitraum zusätzlich auf fünf Minuten ein.
 
+Um \textbf{komplexe Ereignisse} zu erzeugen ist es notwendig neue Ereignisse in den 
+gleichen oder einem anderen Ereignisstrom einzufügen. Für diesen Zweck bietet EPL die 
+\texttt{insert into}-Anweisung an, diese benötigt als Argument einen Ereignistyp und 
+optional die verwendeten Ereignisattribute dieses Typs. Dazu wird ein neuer Ereignistyp 
+eingeführt: \texttt{create schema TargetEvent(symbol string, average\\ double);}.\\
+Die sich anschließende Anfrage verwendet zusätzlich zur \texttt{intert into}-Anweisung, 
+auch noch sogenannte Gruppenfenster. Durch diese Fenster wird die Anfrage deutlich 
+übersichtlicher, für jede Bedingung die dem Schlüsselwort \texttt{groupwin(CONDITION)} 
+mitgeteilt wird, wird eine separate Längen- oder Zeitfensterinstanz gestartet. Außerdem 
+wird die \texttt{group by}-Anweisung mit einer Bedingung übergeben. Das ist notwendig, da 
+die Aggregationsfunktion für die Durchschnittsberechnung \texttt{avg()} für jedes 
+Ereignis, dass zum Fenster hinzugefügt wird, das Ergebnis der Berechnung ausgibt. 
+\texttt{group by} fasst alle gleichen Ergebnisse zusammen.
 
+\texttt{insert into TargetEvent(symbol, average)\\
+select symbol, avg(price)\\
+from StockTick\#groupwin(symbol)\#length\_batch(6)}
 
+Es wird also jeweils der Durchschnittspreis, der letzten sechs, zu einer Firma gehörenden 
+Aktien, berechnet und als komplexes Ereignis vom Ereignistyp \texttt{TargetEvent} in den 
+Strom eingefügt. Diese komplexen Ereignisse können ebenfalls wieder angefragt werden und 
+zur weiteren Analyse genutzt werden.
+
+\texttt{select  * from TargetEvent();} 
+
+Die Ergebnismenge dieser Anfrage lautet also:
+
+\texttt{\{symbol='YHOO', average=67.0\}}\\
+\texttt{\{symbol='IBM', average=138.83333333333334\}}
 
 %TBD
 % Aktionen in Esper

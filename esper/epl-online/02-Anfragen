@@ -1,18 +1,21 @@
 //create context Batch4Seconds start @now end after 4 sec;
 
 
-//@Name('A') select * from StockTick() where symbol = "IBM";
-//@Name('B') select * from StockTick() where symbol = "RHAT";
+//@Name('A') select * from StockTick() where symbol = 'IBM';
+//@Name('B') select * from StockTick() where symbol = 'RHAT';
 
-//@Name('Out')  select  avg(price) from StockTick() where symbol="IBM" and //price > 146;
+//@Name('Out')  select  avg(price) from StockTick() where symbol='IBM' and //price > 146;
+
+
+create schema StockTick(symbol string, price double);
+create schema NewsTick(symbol string, message string);
+create schema TargetEvent(symbol string, deviation double);
+
 
 
 Ereignistypbaserte Anfragen
 
-@Name('Out') select a,b from pattern[a=StockTick(symbol="IBM") -> b=StockTick(symbol="RHAT")];
-
-
-
+@Name('Out') select a,b from pattern[a=StockTick(symbol='IBM') -> b=StockTick(symbol='RHAT')];
 
 
 
@@ -20,20 +23,31 @@ Ereignistypbaserte Anfragen
 
 Ereignistypbaserte Anfragen mit Kontextbedingung
 
-@Name('Out') select a,b from pattern[every(a=StockTick(symbol="IBM") and b=StockTick(symbol="YHOO"))];
+@Name('Out') select a,b from pattern[every(a=StockTick(symbol='IBM') and b=StockTick(symbol='YHOO'))];
 
 
 unrestricted consumption
 
-@Name('Out') select a,b from pattern[every a=StockTick(symbol="IBM") -> every b=StockTick(symbol="YHOO"))];
+@Name('Out') select a,b from pattern[every a=StockTick(symbol='IBM') -> every b=StockTick(symbol='YHOO'))];
 
 
 
 mehrere Ereignistypen: Nachricht hat EInfluss auf Aktienkurs?;
 
-@Name('Out') select c from pattern[(a=StockTick(symbol="IBM") -> b=NewsTick(symbol="IBM" and message="bad") -> c=StockTick(symbol="IBM" and price < a.price))];
+@Name('Out') select c from pattern[(a=StockTick(symbol='IBM') -> b=NewsTick(symbol='IBM' and message='bad') -> c=StockTick(symbol='IBM' and price < a.price))];
 
-@Name('Out') select c from pattern[(a=StockTick(symbol="IBM") -> b=NewsTick(symbol="IBM" and message="bad") -> c=StockTick(symbol="IBM" and price < a.price))].win:time_batch(2sec);
+@Name('Out') select c from pattern[(a=StockTick(symbol='IBM') -> b=NewsTick(symbol='IBM' and message='bad') -> c=StockTick(symbol='IBM' and price < a.price))].win:time_batch(2sec);
+
+
+
+Aktionen:
+
+
+@Name('Out')
+insert into TargetEvent(symbol, average)
+select symbol, avg(price) from StockTick#groupwin(symbol)#length_batch(6) group by symbol;
+
+@Name('Out2')select  * from TargetEvent();
 
 
 
