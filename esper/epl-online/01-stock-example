@@ -14,6 +14,7 @@ t=t.plus(6 seconds)
 
 
 
+
 StockTick={symbol='YHOO', price=65}
 StockTick={symbol='IBM', price=141}
 t=t.plus(2 seconds)

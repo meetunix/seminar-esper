@@ -9,9 +9,33 @@
 
 Ereignistypbaserte Anfragen
 
-select a,b from pattern[a=StockTick(symbol="IBM") -> b=StockTick(symbol="RHAT")];
+@Name('Out') select a,b from pattern[a=StockTick(symbol="IBM") -> b=StockTick(symbol="RHAT")];
+
+
+
+
+
+
 
 
 Ereignistypbaserte Anfragen mit Kontextbedingung
 
-select a,b from pattern[a=StockTick(symbol="IBM") -> b=StockTick(symbol="RHAT")];
+@Name('Out') select a,b from pattern[every(a=StockTick(symbol="IBM") and b=StockTick(symbol="YHOO"))];
+
+
+unrestricted consumption
+
+@Name('Out') select a,b from pattern[every a=StockTick(symbol="IBM") -> every b=StockTick(symbol="YHOO"))];
+
+
+
+mehrere Ereignistypen: Nachricht hat EInfluss auf Aktienkurs?;
+
+@Name('Out') select c from pattern[(a=StockTick(symbol="IBM") -> b=NewsTick(symbol="IBM" and message="bad") -> c=StockTick(symbol="IBM" and price < a.price))];
+
+@Name('Out') select c from pattern[(a=StockTick(symbol="IBM") -> b=NewsTick(symbol="IBM" and message="bad") -> c=StockTick(symbol="IBM" and price < a.price))].win:time_batch(2sec);
+
+
+
+
+ hdstueck@htwg-konstanz.de 

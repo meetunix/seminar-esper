@@ -653,29 +653,211 @@ unter einen Wert von 144 fallen lässt.
 \texttt{select * from StockTick().win:length\_batch(4)\\where symbol='IBM' and 
 price < 144}
 
-Um die in Sektion \ref{kap:ereignisregeln} erwähnten ereignistypbasierten Muster in EPL 
-zu verwenden existiert das Schlüsselwort \texttt{pattern[]}.
+Um \textbf{ereignistypbasierte Muster} in EPL zu verwenden, wie sie in Sektion 
+\ref{kap:ereignisregeln} erwähnt wurden, existiert das Schlüsselwort \texttt{pattern[]}. 
+Mit dessen Hilfe kann man Ereignisse auf einem endlosen Datenstrom detektieren, ohne 
+Fenster einzusetzen. Als Grundlage für die folgenden Beispiele soll der folgende, 
+angepasste Ereignisstrom dienen. Dem Ereignisstrom wurde ein neuer Ereignistyp namens 
+\texttt{NewsTick} mit der Definition
+\texttt{create schema NewsTick(symbol string, message string);} hinzugefügt.
+\begin{verbatim}
+StockTick={symbol='YHOO', price=65}
+StockTick={symbol='IBM', price=141}
+t=t.plus(2 seconds)
+StockTick={symbol='IBM', price=142}
+StockTick={symbol='YHOO', price=62}
+t=t.plus(2 seconds)
+StockTick={symbol='IBM', price=146}
+NewsTick={symbol="IBM",message="good"}
+StockTick={symbol='YHOO', price=63}
+t=t.plus(2 seconds)
+StockTick={symbol='YHOO', price=64}
+StockTick={symbol='IBM', price=147}
+t=t.plus(6 seconds)
+StockTick={symbol='YHOO', price=71}
+StockTick={symbol='IBM', price=150}
+StockTick={symbol='RHAT', price=95}
+NewsTick={symbol="IBM",message="bad"}
+t=t.plus(6 seconds)
+StockTick={symbol='YHOO', price=77}
+StockTick={symbol='IBM', price=107}
+\end{verbatim}
+
+Um mit dem \texttt{pattern[]}-Schlüsselwort auf Ereignisströmen zu operieren muss zuvor 
+dessen Mechanismus zur Ereignisauswahl geklärt werden. Im Gegensatz zu Fenstern, wo aus 
+einer unendlichen Menge eine klar über die Zeit oder Mächtigkeit definierte, endliche 
+Untermenge betrachtet wird, kann die  betrachtete Menge mithilfe des 
+\texttt{pattern[]}-Mechanismus unterschiedlich groß in Bezug auf Zeit und Mächtigkeit 
+sein. Die Handlungsweise hängt stark von der Anfrage ab und wird mit dem Begriff  
+\textit{Event Consumption} belegt. Die Verschiedenen Verfahren wurden in 
+\cite{adaikkalavan} ausführlich vorgestellt und in \cite{hedtstuck} in Zusammenhang mit 
+Esper gebracht. Betrachtet man eine ereignistypbasierte Regel, die zwei Ereignistypen 
+mithilfe des schon beschriebenen Sequenzoperators in Kontext setzt 
+(\texttt{pattern[A->B]}), dann wird der Ereignistyp A als Initiator und B als Detektor 
+bezeichnet. Ein einfaches Beispiel, angewendet auf den neu eingeführten Ereignisstrom, 
+lautet folgendermaßen. Dabei soll die Yahoo-Kurskorrektur gefunden werden, die zeitlich 
+auf eine IBM-Kurskorrektur folgt.
+
+\texttt{select b from pattern[a=StockTick(symbol='IBM') ->\\ 
+b=StockTick(symbol='YHOO')];}
+
+Das einzige Ergebnis dieser Anfrage ist das Detektorereignis 
+\texttt{StockTick=\{symbol='YHOO', price=62\}}. Das Initiatorereignis ist die erste 
+Auftretende IBM-Kurskorrektur \texttt{StockTick={symbol='IBM', price=141}}. Wird ein 
+Initiatorereignis gefunden, startet Esper einen dedizierten \textit{Event Processing 
+Agent (EPA)} (siehe \cite{bruns}), der alle eintreffenden Ereignisse in zeitlicher 
+Reihenfolge analysiert. Trifft der \textit{EPA} auf das Detektorereignis wurde das Muster 
+erkannt und der angefragte Datensatz wird als Rückgabe bereit gestellt. Auch andere 
+logische Operatoren dürfen in diesen Anfragen Verwendung finden. Wird statt dem 
+Sequenzoperator \texttt{->} die Konjunktion \texttt{and} verwendet, ändert sich das 
+Detektorereignis zu \texttt{StockTick=\{symbol='YHOO', price=65\}}, aufgrund der 
+Kommutativität dieses Operators.\\
+Aus dieser Darstellung heraus ist erkennbar, dass in diesem Beispiel lediglich ein 
+\textit{EPA} gestartet wurde. Zudem geht aus dem Ereignisstrom hervor, dass dieses Muster 
+noch auf weitere Ereignisse zutreffen könnte. Um Esper anzuweisen zusätzliche 
+\textit{EPA} zu starten muss der Operator \texttt{every} eingesetzt werden. Die folgende 
+Anfrage verdeutlicht beispielhaft die Anwendung des 
+\textit{Unrestricted Consumption Mode} in EPL.
+
+\texttt{select a.price,b,price from\\pattern[every a=StockTick(symbol='IBM') ->\\
+every b=StockTick(symbol='YHOO')];}
+
+Im \textit{Unrestricted Consumption Mode} wird für jedes Initiatorereignis ein eigener 
+\textit{EPA} gestartet und zudem wird jedes mögliche Detektorereignis in die 
+Eregbnismenge mit einbezogen. Die Ergebnismenge für diese Anfrage ist in Tabelle 
+\ref{table:unres} vereinfacht als Tupel der er Ereignisparameter \texttt{price} 
+$(a_n,b_n)$ dargestellt. 
+
+
+\begin{table}[ht]
+    \caption{\textit{Unrestricted Consumption Mode}}
+    \label{table:unres}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \cellcolor{shadecolor}$a_n$   &\cellcolor{shadecolor} $b_1$    
+            &\cellcolor{shadecolor}$b_2$    &\cellcolor{shadecolor}$b_3$ & 
+            \cellcolor{shadecolor}$b_4$ &\cellcolor{shadecolor}$b_5$\\  
+            \hline
+            141     &62 &63 &64 &71 &77 \\
+            142     &62 &63 &64 &71 &77 \\
+            146     &   &63 &64 &71 &77 \\
+            147     &   &   &   &71 &77 \\
+            150     &   &   &   &   &77 \\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
+
+
+Das sich anknüpfende Beispiel demonstriert den \textit{Continous Consumption Mode}. In 
+diesem Modus wird ebenfalls für jedes Initiatorereignis ein eigener \textit{EPA} 
+gestartet, allerdings terminiert dieser beim ersten Entdecken eines Detektorevents, was 
+die Ergebnismenge stark einschränkt, wie in Tabelle \ref{table:cont} gezeigt.
+ 
+\texttt{select a.price,b.price from\\pattern[every a=StockTick(symbol='IBM') ->\\
+b=StockTick(symbol='YHOO')];}
+
+\begin{table}[ht]
+    \caption{\textit{Continous Consumption Mode}}
+    \label{table:cont}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \cellcolor{shadecolor}$a_n$   &\cellcolor{shadecolor} $b_1$    
+            &\cellcolor{shadecolor}$b_2$    &\cellcolor{shadecolor}$b_3$ & 
+            \cellcolor{shadecolor}$b_4$ &\cellcolor{shadecolor}$b_5$\\  
+            \hline
+            141     &62 & & & & \\
+            142     &62 & & & & \\
+            146     &   &63 & & & \\
+            147     &   &   &   &71 & \\
+            150     &   &   &   &   &77 \\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
+
+Sehr ähnlich ist auch der sich anschließende Modus, bei dem der Operator \texttt{every} 
+vor einem Detektorereignis, anstatt vor dem Initiatorereignis platziert wird. Es wird 
+daher lediglich ein \textit{EPA} gestartet, dieser aggregiert alle weiteren 
+Detektorereignisse, wie in Tabelle \ref{table:cont2} abgebildet. Er wird im Folgenden 
+\textit{Continous Detection Mode} genannt.
+
+\begin{table}[ht]
+    \caption{\textit{Continous Detection Mode}}
+    \label{table:cont2}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \cellcolor{shadecolor}$a_1$   &\cellcolor{shadecolor} $b_1$    
+            &\cellcolor{shadecolor}$b_2$    &\cellcolor{shadecolor}$b_3$ & 
+            \cellcolor{shadecolor}$b_4$ &\cellcolor{shadecolor}$b_5$\\  
+            \hline
+            141     &62 &63 &64 &71 &77 \\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
+\newpage
+Der letztmögliche, durch den Operator \texttt{every}, darstellbare Modus eignet sich für 
+Mustererkennungen von hochfrequent eintretenden 
+Ereignissen, welche auch mehrfach vorkommen können. Durch das erste Initiatorereignis 
+wird eine \textit{EPA}-Instanz gestartet. Trifft diese Instanz auf ein Detektorereignis, 
+wird dieses als \textit{callback} an den \textit{Listener} gesendet und die Instanz 
+beendet. Im Anschluss wird nach einem weiteren Initiatorereignis gesucht und eine neue 
+\textit{EPA}-Instanz gestartet, trifft diese auf ein weiteres mögliches 
+Initiatorereignis, ohne vorher auf ein Detektorereignis gestoßen zu sein, wird dieses
+Initiatorereignis überlesen und erst mit dem Auffinden eines Detektorereignisses beendet. 
+Dieser Vorgang führt bei nachfolgender Anfrage zu dem Ergebnis in Tabelle 
+\ref{table:recent}.
+
+\texttt{\texttt{select a.price,b.price from\\pattern[every (a=StockTick(symbol='IBM') ->\\
+        b=StockTick(symbol='YHOO'))];}}
+
+\begin{table}[ht]
+    \caption{\textit{Regular Consumption Mode}}
+    \label{table:recent}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|c|c|c|c|c|}
+            \hline
+            \cellcolor{shadecolor}$a_1$   &\cellcolor{shadecolor} $b_1$    
+            &\cellcolor{shadecolor}$b_2$    &\cellcolor{shadecolor}$b_3$ & 
+            \cellcolor{shadecolor}$b_4$ &\cellcolor{shadecolor}$b_5$\\  
+            \hline
+            141     &62 & & & & \\
+            142     & & & & & \\
+            146     & &63 & & & \\
+            147     & & & &71 & \\
+            141     & & & & &77 \\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
+
+Alle zuvor beschriebenen Beispiele können auch mit Fenstern kombiniert werden. Mit deren 
+Hilfe lassen sich zum Beispiel Untersuchungszeiträume festlegen. Auch der Speicherbedarf 
+kann durch eine Zeit- oder Längenlimitierung begrenzt werden. Die sich anschließende 
+Anfrage soll als komplexeres Beispiel dienen. Es soll untersucht werden, ob eine negative 
+Nachrichtenmeldung den Aktienkurs der IBM-AKtie nachteilig beeinflusst.
+
+\texttt{select c from pattern[a=StockTick(symbol='IBM') ->\\
+    b=NewsTick(symbol='IBM' and message='bad') ->\\
+    c=StockTick(symbol='IBM' and\\ price < a.price)].win:time\_batch(30sec);}
+
+In diesem Beispiel wird neben einer kontextabhängigen Bedingung (\texttt{proce < 
+a.price}), auch nur ein Zeitraum von 30 Sekunden betrachtet.
+
+
+
 
 %TBD
-% einfache ereignistypbasierte Anfragen
-% consumption modes
-% -> Operator
-% -> Operator mit Fenstern
-% -> Operator mit Kontextbedingungen
-% -> Beispiel SocialMedia hat Einfluss auf Aktienkurs?
-
-%
-% Problembeispiel
-%
-
-\subsection{Problembeispiel mit Esper}
-\vspace{0.1cm}
-\subsubsection{Problembeschreibung}
-\vspace{0.1cm}
-\subsubsection{Implementierung mit Esper}
-\vspace{0.1cm}
-\subsubsection{Ergebnis}
-\vspace{0.1cm}
+% Aktionen in Esper
+% 
 
 
 %
