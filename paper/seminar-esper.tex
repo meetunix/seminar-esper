@@ -33,7 +33,7 @@
 \usemintedstyle{}
 
 
-\definecolor{shadecolor}{gray}{.92}
+\definecolor{shadecolor}{gray}{.95}
 \hyphenation{pattern}
 
 
@@ -56,17 +56,24 @@ Martin Steinbach\vspace{0.1cm}\\
 \maketitle
 
 \begin{abstract}
-    \vspace{0.1cm}
-\begin{itemize}
-    \item steige steigerung der Datenmengen -> keine speicherung möglich
-    \item kostengünstige Sensortechnik 
-\end{itemize}
+\vspace{0.1cm}
+Die Verarbeitung von Ereignissen tritt zunehmend in den Vordergrund. Das ist nicht 
+zuletzt der günstigen Sensortechnik und der Überwachung von Prozessen oder Märkten 
+geschuldet. In all diesen Anwendungsgebieten werden Ereignisse erzeugt und das oft in 
+einem Ausmaß, dass eine Speicherung unmöglich wird, oder der Informationsgehalt der 
+Ereignisse schon nah kurzer Zeit sinkt. \textit{Complex Event Processing} bietet eine 
+Möglichkeit diese Ereignisse annähernd in Echtzeit zu analysieren und zu korrelieren um 
+neues Wissen zu erzeugen und auf Basis dieser neuen Erkenntnisse zu reagieren. Die 
+vorliegende Arbeit bietet eine kompakte Einführung in das Thema \textit{Complex Event 
+Processing} und deren zugrunde liegenden Anfragesystematiken. Hauptaugenmerk liegt jedoch 
+in der beispielhaften Veranschaulichung dieser Systematiken anhand der Anfragesprache 
+\textit{EPL} der \textit{CEP}-Software Esper.
 
 \end{abstract}
 
 %\terms{Theory}
 
-\keywords{EDA, CEP, Esper} % NOT required for Proceedings
+\keywords{EDA, CEP, EPL, Esper} % NOT required for Proceedings
 
 \section{Einleitung}
 \vspace{0.1cm}
@@ -474,11 +481,14 @@ Ereignisstrom. Ähnlich wie bei SQL ist ein statement folgendermaßen aufgebaut:
 \texttt{select DATENAUSWAHL from EREIGNISSTROM where FILTER}
 
 Um Anfragen an einen Ereignisstrom zu validieren, bietet der Entwickler von Esper, 
-EsperTech Inc., das Werkezug EPL-Online (\cite{epl-online}) an. Basierend auf den 
-Voreinstellungen in \cite{epl-online} werden die nachfolgenden Beispielanfragen an den 
-Ereignisstrom \texttt{StockTick} gerichtet. Der Zuegörige Ereignistyp wurde zuvor durch 
-das folgende EPL-statement definiert. Die neuen Erzeugten Ereignisse werden durch einen 
-\textit{Listener} entgegengenommen und sind als Ausgabe verfügbar.
+EsperTech Inc., das Werkezug 
+\textit{EPL}-Online\footnote{\url{http://esper-epl-tryout.appspot.com/epltryout/mainform.html}}
+an. Basierend auf den 
+Voreinstellungen in \textit{EPL}-Online werden die nachfolgenden Beispielanfragen an den 
+Ereignisstrom \texttt{StockTick} gerichtet. Der Zugehörige Ereignistyp wurde zuvor durch 
+das folgende EPL-statement definiert. Die neu erzeugten Ereignisse werden als 
+\textit{callbacks} durch einen \textit{Listener} entgegengenommen und sind als Ausgabe 
+verfügbar.
 
 \texttt{create schema StockTick(symbol string, price double);}
 
@@ -487,8 +497,7 @@ Java angelehnt (\texttt{boolean, integer, long, double, float, byte}). Es existi
 auch der Datentyp \texttt{string}, für die Speicherung von unbegrenzt großen 
 Zeichenketten.
 
-Für die Beispiele wird ein Ereignisstrom verwendet, der diesem Schema 
-entspricht.
+Für die Beispiele wird folgender Ereignisstrom verwendet.
 
 \begin{verbatim}
 StockTick={symbol='YHOO', price=65}
@@ -515,14 +524,12 @@ aller Ereignisse.
 \texttt{select * from StockTick();}
 
 Einfache Bedingungen lassen sich mit \texttt{where} realisieren. Zusätzlich lässt Esper 
-noch eine weitere Schreibweise für Bedingungen zu, diese Schreibweise ist äquivalent zur 
-ersten, erhöht jedoch die Lesbarkeit in den später behandelten ereignistypbasierenden 
-Mustern.
+noch eine weitere Schreibweise für Bedingungen zu, diese zweite Schreibweise ist 
+äquivalent zur Ersten, erhöht jedoch die Lesbarkeit in den später behandelten 
+ereignistypbasierenden Mustern.
 
 \texttt{select * from StockTick() where price > 100;}\\
 \texttt{select * from StockTick(price > 100);}
-
-
 
 Eine Aggregation über alle Events kann mittels vordefinierter Funktionen erfolgen. EPL 
 stehen neben den einfachen Funktionen wie \texttt{avg(), count(), sum()} auch 
@@ -891,20 +898,23 @@ Die Ergebnismenge dieser Anfrage lautet also:
 \texttt{\{symbol='YHOO', average=67.0\}}\\
 \texttt{\{symbol='IBM', average=138.83333333333334\}}
 
-%TBD
-% Aktionen in Esper
-% 
 
-
-%
-% Schlussfolgerung
-%
-
-\section{Schlussfolgerung}
+\section{Ausblick}
 \vspace{0.1cm}
+Die vorgestellten Anfragen stellen die Grundlage zur Formulierung komplexer 
+Ereignismuster dar. Welche Strategie zur Ereigniserkennung gewählt wird, hängt ganz vom 
+Szenario ab, in dem das Ereignismuster zum Einsatz kommen soll. Aus diesem Grund bietet 
+die Sprache \textit{EPL} noch eine Vielzahl weiterer Möglichkeiten um Ereignismuster zu 
+formulieren. Zum Beispiel kann durch Auslagerung von Kontextinformationen eine Anfrage 
+übersichtlicher gestaltet werden, die Limitierung der Ausgabe kann die Leistung einer 
+Anfrage verbessern, es können Unterabfragen verwendet werden und es existieren noch 
+weitere Fenstertypen.\\
+Bevor man ein komplexeres Ereignismuster einsetzt, ist es erforderlich, diesem einer 
+Leistungsbetrachtung zu unterziehen. In \cite{esper-reference} existiert ein ganzes 
+Kapitel, welches sich diesem Thema widmet. Laut \cite{eckert} eignet sich \textit{CEP} 
+auch zur Visualisierung von Daten, ein Interessanter Ansatz könnte der in \cite{perry} 
+beschriebene sein.
 
-%\section{Danksagung}
-%Vielen Dank an die Entwickler von Esper und die gute Dokumentation der Software.\\
 
 \appendix
 \vspace{0.1cm}
