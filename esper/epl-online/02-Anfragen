@@ -13,6 +13,10 @@ create schema TargetEvent(symbol string, deviation double);
 
 
 
+@Name('Out')  select  avg(price) from StockTick(symbol = 'IBM').win:time(6sec);
+
+
+
 Ereignistypbaserte Anfragen
 
 @Name('Out') select a,b from pattern[a=StockTick(symbol='IBM') -> b=StockTick(symbol='RHAT')];

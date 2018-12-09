@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[usenames,dvipsnames]{beamer}
 
 \usepackage[utf8]{inputenc}
 \usepackage{ngerman}
@@ -53,11 +53,6 @@
 
 \part{Vortrag}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-    \begin{center}
-        \Large Was ist CEP?
-    \end{center}
-\end{frame}
 \section{Grundlagen CEP}
 
 
@@ -168,7 +163,7 @@
 \section{Esper}
 \begin{frame}{}
 \begin{center}
-    \Large \textbf{ESPER}
+    \Large \textbf{ESPER I}
 \end{center}
 
 \vspace*{1cm}
@@ -183,8 +178,10 @@
 \end{frame}
 
 
-\begin{frame}
-    Grafik: Funktionsschema ESPER
+\begin{frame}{ESPER II}
+     \begin{center}
+        \includegraphics[scale=0.3]{img/esper}\hspace*{1cm}
+    \end{center} 
 \end{frame}
 
 
@@ -332,7 +329,7 @@
     \begin{itemize}
         \item Betrachtung unabhängig von Zeit und Länge
         \vspace{0.2cm}
-        \item boolesche Ausdrücke + Sequenzoperator $\rightarrow$
+        \item boolesche Ausdrücke + Sequenzoperator: $\rightarrow$
         \vspace{0.2cm}
         \item \texttt{pattern[A $\rightarrow$ B]}
         \begin{itemize}
@@ -342,7 +339,7 @@
             \item A ist Initiator, B ist Detektor 
         \end{itemize}
     \vspace{0.2cm}
-        \item \texttt{every}-Operator ($\forall$) (\textit{Event Consumption Modes})
+        \item \texttt{every}-Operator (\textit{Event Consumption Modes})
     \end{itemize}
 \end{block}
 
@@ -375,16 +372,140 @@
 \end{center}
 \end{frame}
 
-\begin{frame}{Consumption Modes}
+\begin{frame}{Ereignistypbasierte Regeln - Consumption Modes I}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
+\begin{exampleblock}{\textit{Unrestricted Consumption Mode:}}
+    \begin{center}
+        \texttt{pattern[ \textcolor{red}{every} A $\rightarrow$ \textcolor{red}{every} 
+        B]}\\\vspace{0.3cm}
+        \texttt{select a,b from pattern[\textcolor{red}{every} a=StockTick(symbol='IBM') 
+        $\rightarrow$ 
+            \textcolor{red}{every} b=StockTick(symbol='SAP')];}
+        \end{center}
+        \begin{itemize}
+            \item Jeder Initiator konsumiert alle Detektoren
+            \item sehr große Ergebnismenge
+        \end{itemize}
+    \end{exampleblock}
+
+\begin{center}
+\includegraphics[scale=0.3]{img/solution-c}
+\end{center}
+\end{frame}
+
+\begin{frame}{Ereignistypbasierte Regeln - Consumption Modes II}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
+\begin{exampleblock}{\textit{Continous Consumption Mode:}}
+    \begin{center}
+        \texttt{pattern[ \textcolor{red}{every} A $\rightarrow$ B]}\\\vspace{0.3cm}
+        \texttt{select a,b from pattern[\textcolor{red}{every} a=StockTick(symbol='IBM') 
+            $\rightarrow$ b=StockTick(symbol='SAP')];}
+    \end{center}
+    \begin{itemize}
+        \item Jeder Initiator konsumiert nur nachfolgenden Detektor
+    \end{itemize}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.3]{img/solution-d}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Ereignistypbasierte Regeln - Consumption Modes III}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
+\begin{exampleblock}{\textit{Continous \textcolor{red}{Detection} Mode:}}
+    \begin{center}
+        \texttt{pattern[  A $\rightarrow$ \textcolor{red}{every} B]}\\\vspace{0.3cm}
+        \texttt{select a,b from pattern[ a=StockTick(symbol='IBM')
+            $\rightarrow$\\ \textcolor{red}{every} b=StockTick(symbol='SAP')];}
+    \end{center}
+    \begin{itemize}
+        \item Ein Initiator konsumiert alle nachfolgenden Detektoren
+    \end{itemize}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.3]{img/solution-e}
+\end{center}
+\end{frame}
+
+\begin{frame}{Ereignistypbasierte Regeln - Consumption Modes IV}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
+\begin{exampleblock}{\textit{Regular Consumption Mode:}}
+    \begin{center}
+        \texttt{pattern[\textcolor{red}{every (}A $\rightarrow$  
+        B\textcolor{red}{)}]}\\\vspace{0.3cm}
+        \texttt{select a,b from pattern[\textcolor{red}{every (}%
+        a=StockTick(symbol='IBM')$\rightarrow$  
+        b=StockTick(symbol='SAP')\textcolor{red}{)}];}
+    \end{center}
+    \begin{itemize}
+        \item Initiator sucht nach Detektor
+        \item Initiatoren auf dem Pfad werden nicht betrachtet
+    \end{itemize}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.4]{img/solution-f}
+\end{center}
+\end{frame}
+
+\begin{frame}{Ereignistypbasierte Regeln - Beispiel}
 \begin{center}
     \includegraphics[scale=0.4]{img/stream-2}
 \end{center}
 
+\begin{block}{}
+    \centering
+    Wollen herausfinden, ob Nachrichtenmeldung Einfluss auf Aktienkurs hat
+\end{block}
 
+\begin{exampleblock}{}
+    \begin{center}
+    \texttt{select c from pattern[\textcolor{Magenta}{a=StockTick(symbol='IBM')} ->\\
+    \textcolor{Bittersweet}{b=NewsTick(symbol='IBM' and message='bad')} ->\\
+    \textcolor{blue}{c=StockTick(symbol='IBM' and price < 
+    \textcolor{Magenta}{a}.price)}];} 
+    \end{center}
+ 
+\end{exampleblock}
 
+\begin{center}
+    \includegraphics[scale=0.4]{img/solution-g}
+\end{center}
 \end{frame}
 
+\begin{frame}{Komplexe Ereignisse}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
 
+\begin{block}{}
+    \centering
+    Wollen neues Ereignis: Mittelwert der letzten 6 Aktien einer Firma
+\end{block}
+
+\begin{exampleblock}{}
+    \texttt{\textcolor{red}{insert into TargetEvent(symbol, average)}\\
+        select symbol, avg(price)\\
+        from StockTick\#groupwin(symbol)\#length\_batch(6);}\\\vspace{0.3cm}
+    \texttt{select  * from \textcolor{red}{TargetEvent};}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.35]{img/solution-h}
+\end{center}
+
+\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Endfolie}
@@ -393,7 +514,7 @@
 
 \framebreak
 \begin{center}
-\Large \textcolor{red!60}{{Danke für die Aufmerksamkeit}}\\
+\Large \textcolor{red!60}{{Danke für die Aufmerksamkeit.}}\\
 \vspace{0.5 cm}
 \end{center}
 \begin{center}
