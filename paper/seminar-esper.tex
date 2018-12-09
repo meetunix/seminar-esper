@@ -220,11 +220,11 @@ kann ein Ereignis folgendermaßen aufgebaut sein (\cite{hedtstuck}):
             \hline
             \multicolumn{2}{|l|}{\cellcolor{shadecolor}\textbf{Kontextinformation}}\\     
             \hline
-            \multicolumn{2}{|l|}{\texttt{Name: acme GmbH}}\\
+            \multicolumn{2}{|l|}{\texttt{Name: ACME GmbH}}\\
             \multicolumn{2}{|l|}{\texttt{Einkaufkurs: 32.5}}\\
-            \multicolumn{2}{|l|}{\texttt{Letzer Kurs: 40.8}}\\
+            \multicolumn{2}{|l|}{\texttt{Letzter Kurs: 40.8}}\\
             \multicolumn{2}{|l|}{\texttt{Differenzbetrag: 5.7}}\\
-            \multicolumn{2}{|l|}{\texttt{Aktualler Kurs: 42.1}}\\
+            \multicolumn{2}{|l|}{\texttt{Aktueller Kurs: 42.1}}\\
             \hline
         \end{tabular} 
     }
@@ -550,7 +550,7 @@ Durchschnittspreis der IBM-Aktie der letzten 6 Sekunden:
 \texttt{select  avg(price) from StockTick().win:time(6 sec)\\where symbol='IBM'}
 
 Da es sich hierbei um ein normales Zeitfenster ohne expliziten Verschiebefaktor handelt 
-(siehe auch Abschnitt \ref{kap:verschiebefaktor}), werden insgesamt 8 Ergebnisse 
+(siehe auch Abschnitt \ref{kap:verschiebefaktor}), werden insgesamt 7 Ergebnisse 
 ausgegeben. Trifft ein Muster auf ein Ereignis zu, so bekommt dieses Ereignis eine 
 Gültigkeitsdauer zugeordnet, es ist damit in das Fenster aufgenommen wurden. Läuft die 
 Gültigkeitsdauer ab, so wird das Ereignis aus dem Fenster entfernt. Tabelle 

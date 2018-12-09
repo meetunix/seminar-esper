@@ -30,7 +30,6 @@ StockTick={symbol='IBM', price=147}
 t=t.plus(6 seconds)
 StockTick={symbol='YHOO', price=71}
 StockTick={symbol='IBM', price=150}
-StockTick={symbol='RHAT', price=95}
 NewsTick={symbol="IBM",message="bad"}
 t=t.plus(6 seconds)
 StockTick={symbol='YHOO', price=77}

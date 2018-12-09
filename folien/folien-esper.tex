@@ -8,7 +8,9 @@
 \usecolortheme{rose}
 \usepackage{graphicx}
 \usepackage{colortbl}
+\usepackage{xcolor}
 
+\definecolor{shadecolor}{gray}{.95}
 
 \beamertemplatenavigationsymbolsempty
 
@@ -32,43 +34,358 @@
 \renewcommand{\arraystretch}{1.5}
 
 
-\title{CEP mit Esper}
-\subtitle{\Large Complex Event Processing am Beispiel von Esper}
+\title{CEP am Beispiel von Esper}
+\subtitle{\scriptsize Seminar - Event Driven Architectures}
 \institute{}
 \author{Martin Steinbach}
-\date{14.01.2019}
+\date{Januar 2019}
 
 \begin{document}
 
 
 \part{Startfolie}
-%Startfolie
 \begin{frame}
 \titlepage
 \end{frame}
 
-\begin{frame}{Agenda}
-  
-\end{frame}
 
 
-\part{Praesentation}
+
+\part{Vortrag}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+    \begin{center}
+        \Large Was ist CEP?
+    \end{center}
+\end{frame}
 \section{Grundlagen CEP}
-\subsection{Was ist CEP?}
-\begin{frame}{Testüberschrift}
-pl
+
+
+\begin{frame}{\textbf{C}omplex \textbf{E}vent \textbf{P}rocessing}
+
+\begin{exampleblock}{}
+    \begin{itemize}
+        \item  Analyse von unendlichen Ereignisströmen  
+    \end{itemize}
+\end{exampleblock}
+
+\begin{center}
+   \includegraphics[scale=0.4]{img/01_cep}
+\end{center}
+
+
 \end{frame}
 
+\begin{frame}{Komplexe Ereignisse}
+
+\begin{exampleblock}{}
+    \begin{itemize}
+        \item Ereignismuster beschreiben Beziehungen zwischen Ereignissen
+        \item Komplexe Ereignisse sind Abstraktionen von Ereignismengen
+    \end{itemize}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.3]{img/02_cep}
+\end{center}
+
+\end{frame}
+
+
+
+\begin{frame}{Ereignismuster}
+
+\begin{exampleblock}{}
+    \begin{center}
+        \textbf{A} vor \textbf{C} vor \textbf{D}    
+    \end{center}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.3]{img/03_cep}
+\end{center}
+\begin{exampleblock}{}
+    \begin{center}
+        \textbf{Ereignistypen}  
+    \end{center}
+\end{exampleblock}
+
+
+\begin{center}
+    \includegraphics[scale=0.3]{img/04_cep}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Ereignis in CEP}
+
+
+\begin{columns}
+
+\begin{column}{0.5\textwidth}
+\begin{table}[ht]
+    \centering{
+        \renewcommand{\arraystretch}{1.1}
+        \begin{tabular}{|l|c|}
+            \hline
+            \multicolumn{2}{|l|}{\cellcolor{shadecolor}\textbf{Metadaten}}\\
+            \hline
+            Ereignistyp\hspace{0.2cm} &   \texttt{Kursänderung}\\ 
+            \hline
+            Ereignisquelle\hspace{0.5cm} &   \texttt{Frankfurt}\\ 
+            \hline 
+            Zeitstempel &   \texttt{21:19:55}\\
+            \hline
+            ID          &   \texttt{98127634}\\  
+            \hline
+            \multicolumn{2}{|l|}{\cellcolor{shadecolor}\textbf{Kontextinformation}}\\     
+            \hline
+            \multicolumn{2}{|l|}{\texttt{Name: ACME GmbH}}\\
+            \multicolumn{2}{|l|}{\texttt{Aktueller Kurs: 42.1}}\\
+            \hline
+        \end{tabular} 
+    }
+\end{table}
+\end{column}
+\begin{column}{0.4\textwidth}
+    \begin{exampleblock}{}
+        \begin{itemize}
+            \item Aufbereitete Rohdaten
+            \vspace{0.6 cm}
+            \item Strukturiert
+            \vspace{0.6 cm}
+            \item Maschinenlesbar
+            \vspace{0.6 cm}
+            \item Atomar
+        \end{itemize}
+    \end{exampleblock}
+\end{column}
+\end{columns}
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%% ESPER %%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Esper}
-\begin{frame}{Esper}
- \begin{exampleblock}{titel}
-   Inhalt...
- \end{exampleblock}
+\begin{frame}{}
+\begin{center}
+    \Large \textbf{ESPER}
+\end{center}
+
+\vspace*{1cm}
+
+\begin{tabular}{ll}
+    Free Software (GPLv2) \hspace{3cm}   &\\
+                            &CEP-Engine \\
+    \hspace{2cm}\textbf{E}vent \textbf{P}rocessing \textbf{L}anguage & \\
+                            &\hspace{2cm}\texttt{Java} und \texttt{C\#} \\ 
+    \hspace{1cm}EPL $\rightarrow$ Bytecode&\\
+\end{tabular}
 \end{frame}
+
+
+\begin{frame}
+    Grafik: Funktionsschema ESPER
+\end{frame}
+
+
+        
+
+
+\begin{frame}{Esper - Ereignistypen}
+\begin{columns}   
+\begin{column}{0.5\textwidth}
+    
+  \begin{center}
+      \hspace{1cm}\includegraphics[scale=0.3]{img/ereignis_aa}
+       \includegraphics[scale=0.3]{img/ereignis_a}
+  \end{center} 
+
+\end{column}
+
+\begin{column}{0.5\textwidth}
+      \begin{center}
+        \includegraphics[scale=0.3]{img/ereignis_b}
+    \end{center}  
+    
+\end{column}
+\end{columns}
+
+\begin{tabbing}
+    \textbf{Ereignistyp}:\hspace{0.2cm} \= StockTick \hspace{3cm} \= NewsTick\\
+    \>\>\\
+    \textbf{symbol:} \> 'IBM'/'SAP' \>'IBM'\\
+    \textbf{price:} \> Integer \> -\\
+    \textbf{message:} \> - \> 'good'/'bad'
+\end{tabbing}
+
+\begin{columns}   
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+            \hspace{1cm}\includegraphics[scale=0.3]{img/ereignis_aa1}
+            \includegraphics[scale=0.3]{img/ereignis_a1}
+        \end{center} 
+    \end{column} 
+    \begin{column}{0.5\textwidth}
+        \begin{center}
+            \includegraphics[scale=0.3]{img/ereignis_b1}
+        \end{center}  
+        
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{EPL - einfache Anfragen}
+    \begin{center}
+        \includegraphics[scale=0.35]{img/stream-1}
+    \end{center}    
+
+\begin{exampleblock}{\centering EPL - einfache Anfragen}
+    \begin{center}
+         \texttt{\textcolor{red}{select} PARAMETER \textcolor{red}{from} SOURCE 
+            \textcolor{red}{where} CONDITION;}
+    \end{center}
+\end{exampleblock}
+
+\begin{exampleblock}{\centering Eine einfache Anfrage}
+    \begin{center}
+        \texttt{select * from StockTick where price > 100;}\\
+        $=$\\
+        \texttt{select * from StockTick\textcolor{red}{(}price > 100\textcolor{red}{)};}
+    \end{center}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.2]{img/solution-1}$\dots \infty$
+\end{center}
+\end{frame}
+
+
+\begin{frame}{EPL - einfache Anfragen}
+\begin{center}
+    \includegraphics[scale=0.35]{img/stream-1}
+\end{center}
+\begin{exampleblock}{\centering Aggregation}
+    \begin{center}
+        \texttt{select avg(price) from StockTick(where symbol='IBM')}
+    \end{center}
+\end{exampleblock}
+\begin{center}
+    \includegraphics[scale=0.2]{img/solution-2}$\dots \infty$
+\end{center}
+
+\pause
+\begin{alertblock}{}
+    \begin{itemize}
+        \item Operationen auf $\infty$-Datenstrom
+        \item Anfragen würde ewig Ereignisse erstellen
+    \end{itemize}
+\end{alertblock}
+
+\end{frame}
+
+\begin{frame}{Fenster - einfache Zeitfenster}
+
+\begin{exampleblock}{}
+    \begin{center}
+        \texttt{select  avg(price) from StockTick\textcolor{red}{.win:time(6 sec)} where 
+        symbol='IBM'}
+    \end{center}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.40]{img/solution-3}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Fenster - \texttt{batch}-Zeitfenster}
+\begin{exampleblock}{}
+    \begin{center}
+        \texttt{select  avg(price) from StockTick.win:time\textcolor{red}{\_batch}(6 sec) 
+        where symbol='IBM'}
+    \end{center}
+\end{exampleblock}
+\vspace{1cm}
+\begin{center}
+    \includegraphics[scale=0.5]{img/solution-4}
+\end{center}
+\end{frame}
+\begin{frame}{\texttt{Fenster - batch}-Längenfenster}
+\begin{exampleblock}{}
+    \begin{center}
+        \texttt{select  avg(price) from 
+        StockTick.win:\textcolor{red}{length\_batch}(4) where symbol='IBM'}
+    \end{center}
+\end{exampleblock}
+\vspace{1cm}
+\begin{center}
+    \includegraphics[scale=0.5]{img/solution-5}
+\end{center}
+
+\end{frame}
+
+%EREIGNISTYPBASIERTE REGELN
+\begin{frame}{Ereignistypbasierte Regeln}
+
+
+\begin{block}{\centering \texttt{pattern[]}}
+    \begin{itemize}
+        \item Betrachtung unabhängig von Zeit und Länge
+        \vspace{0.2cm}
+        \item boolesche Ausdrücke + Sequenzoperator $\rightarrow$
+        \vspace{0.2cm}
+        \item \texttt{pattern[A $\rightarrow$ B]}
+        \begin{itemize}
+            \item \texttt{A, B} sind Ereignistypen
+            \item \texttt{a,b} deren Instanzen
+            \item A tritt zeitlich nach B ein
+            \item A ist Initiator, B ist Detektor 
+        \end{itemize}
+    \vspace{0.2cm}
+        \item \texttt{every}-Operator ($\forall$) (\textit{Event Consumption Modes})
+    \end{itemize}
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Ereignistypbasierte Regeln}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
+
+\begin{exampleblock}{}
+    \begin{center}
+    \texttt{select \textcolor{red}{b} from 
+    \textcolor{red}{pattern[a=StockTick(symbol='IBM') $\rightarrow$ 
+    b=StockTick(symbol='SAP')]};}
+\end{center}
+\end{exampleblock}
+\begin{center}
+    \includegraphics[scale=0.25]{img/solution-a}
+\end{center}
+
+\begin{exampleblock}{}
+\begin{center}
+    \texttt{select b from pattern[a=StockTick(symbol='IBM') \textcolor{red}{and} 
+    b=StockTick(symbol='SAP')];}
+\end{center}
+\end{exampleblock}
+\begin{center}
+    \includegraphics[scale=0.25]{img/solution-b}
+\end{center}
+\end{frame}
+
+\begin{frame}{Consumption Modes}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
+
+
+
+\end{frame}
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Endfolie}
 \setbeamercolor{background canvas}{bg=green!3}
