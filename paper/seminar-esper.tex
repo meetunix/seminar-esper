@@ -189,7 +189,7 @@ Letztere benötigt allerdings Technologien wie \textit{MachineLearning} und
 sind kontinuierliche, kleinteilige Datensätze in der 
 zeitlichen Reihenfolge ihres Auftretens oder ihrer Messung. Die Daten weisen eine geringe 
 Komplexität auf und beziehen sich nur auf ein Datum (zum Beispiel den Messwert eines 
-Sensors oder den Kurs eines Wertpapiers.). Die Ströme sind sind endlos und meist 
+Sensors oder den Kurs eines Wertpapiers.). Die Ströme sind endlos und meist 
 hochfrequent und massiv, daher können die Daten nicht persistent gespeichert werden.\\
 Jeder Datensatz in einem Datenstrom bildet ein eigenes 
 \textbf{\textit{Ereignisse}}. Im 
@@ -238,7 +238,7 @@ Ereignissen gesucht, diese werden durch \textbf{\textit{Ereignismuster}} beschri
 Mustererkennung wird nur über einem bestimmtes Zeitintervall des Ereignisstromes 
 ausgeführt und durch Ereignisanfragesprachen definiert. In \cite{bruns} werden drei Arten 
 von Ereignismustern unterschieden. Können Muster ausschließlich durch boolesche 
-Operatoren der Aussagelogik festgelegt werden, so fallen sie in die Kategorie der 
+Operatoren der Aussagenlogik festgelegt werden, so fallen sie in die Kategorie der 
 \textit{einfachen Ereignismuster}. Werden hingegen speziellere Operatoren nötig, um zum 
 Beispiel die Reihenfolge oder Zeitfenster in den Ereignisse auftreten auszudrücken, 
 gehören sie zur Kategorie der \textit{komplexen Ereignismuster}. Zur Kategorie der 
@@ -486,7 +486,7 @@ Ereignisstrom. Ähnlich wie bei SQL ist ein Statement folgendermaßen aufgebaut:
 \texttt{select DATENAUSWAHL from EREIGNISSTROM where FILTER}
 
 Um Anfragen an einen Ereignisstrom zu validieren, bietet der Entwickler von Esper, 
-EsperTech Inc., das Werkezug 
+EsperTech Inc., das Werkzeug 
 \textit{EPL}-Online\footnote{\url{http://esper-epl-tryout.appspot.com/epltryout/mainform.html}}
 an. Basierend auf den 
 Voreinstellungen in \textit{EPL}-Online werden die nachfolgenden Beispielanfragen an den 
@@ -592,7 +592,7 @@ Zeitfenster mit einem fixen Verschiebefaktor. Die sogenannten \texttt{batch}-Fen
 entspricht. Die gleiche Anfrage mithilfe eines \texttt{batch}-Fensters verhält sich 
 folgendermaßen.
 
-\texttt{select  avg(price) from StockTick.win:time\_batch(6 sec)where symbol='IBM'}
+\texttt{select  avg(price) from StockTick.win:time\_batch(6 sec) where symbol='IBM'}
 
 \begin{table}[ht]
     \caption{\texttt{batch}-Fenster}
