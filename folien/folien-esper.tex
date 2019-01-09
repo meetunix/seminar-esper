@@ -174,6 +174,7 @@
     \hspace{2cm}\textbf{E}vent \textbf{P}rocessing \textbf{L}anguage & \\
                             &\hspace{2cm}\texttt{Java} und \texttt{C\#} \\ 
     \hspace{1cm}EPL $\rightarrow$ Bytecode&\\
+        & SQL-\texttt{MATCH\_RECOGNIZE}\\
 \end{tabular}
 \end{frame}
 
@@ -230,6 +231,47 @@
     \end{column}
 \end{columns}
 \end{frame}
+
+
+\begin{frame}{Musterdefinition - EPL/SQL}
+
+\begin{exampleblock}{\textbf{E}vent \textbf{P}rocessing \textbf{L}anguage}
+    \begin{itemize}
+        \item Syntax ähnlich SQL
+        \item Beschreibung durch Aussagenlogik + spezielle Operatoren
+        \item Operiert auf unterschiedlichen Ereignistypen
+    \end{itemize}
+
+\end{exampleblock}
+
+\begin{exampleblock}{SQL-Erweiterung: \texttt{MATCH\_RECOGNIZE}}
+\begin{itemize}
+    \item Einbettung in EPL-Anfrage
+    \item Standardisiert in SQL:2016 (ISO/IEC 9075:2016)
+    \item Beschreibung durch Reguläre Ausdrücke
+    \item Operiert auf einem Ereignistyp
+\end{itemize}
+\end{exampleblock}
+   
+\end{frame}
+
+\begin{frame}{EPL-Operatoren}
+
+\begin{block}{\centering wichtige Operatoren von EPL}
+    \begin{tabbing}
+        \texttt{A and B}:\hspace{3cm}  \=   A $\land$ B, Reihenfolge egal\\\\
+        \texttt{A or B}: \>     A $\lor$ B, Reihenfolge egal\\\\
+        \texttt{A -> B}: \>     Sequenz, B tritt zeitlich nach A ein\\\\
+        \texttt{(A -> B) and not C}: \>     kein C vor A und B\\\\
+        \texttt{every A}: \>        detektiert alle A im Strom\\\\
+        \texttt{[5] A}: \> Repeat, Detektion nach 5 A          
+        
+    \end{tabbing}
+\end{block}
+
+
+\end{frame}
+
 
 \begin{frame}{EPL - einfache Anfragen}
     \begin{center}
@@ -506,6 +548,35 @@
 \end{center}
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%% MATCH_RECOGNIZE %%%%%%%%%%%%%%%
+\begin{frame}{SQL: \texttt{Match\_Recognize}}
+\begin{center}
+    \includegraphics[scale=0.4]{img/stream-2}
+\end{center}
+
+\begin{exampleblock}{}
+\texttt{select * from StockTick \textcolor{Bittersweet}{match\_recognize} (\\
+\textcolor{Bittersweet}{partition} by symbol\\
+\textcolor{Bittersweet}{measures} A[0].price as a0,A[1].price as a1, A[2].price as a2, 
+B.price as b\\
+\textcolor{Bittersweet}{pattern} \textcolor{red}{(A\{2,3\} B)}\\
+\textcolor{Bittersweet}{define}\\
+A as A.price < 150,
+B as B.price >= 150)
+}
+\end{exampleblock}
+
+\begin{center}
+    \includegraphics[scale=0.6]{img/solution-i}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Fazit}
+   jaaa, genau, was schreibt man hier ...
+\end{frame}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Endfolie}
