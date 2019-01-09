@@ -53,6 +53,29 @@ select symbol, avg(price) from StockTick#groupwin(symbol)#length_batch(6) group 
 
 @Name('Out2')select  * from TargetEvent();
 
+################################################### MATCH_RECOGNIZE ###############################
+
+
+select * from StockTick
+match_recognize (
+  partition by symbol
+  measures A.price as a_price, B.price as b_price
+  pattern (A B)
+  define 
+    B as Math.abs(B.price - A.price) >= 5
+)
+
+
+select * from StockTick
+match_recognize (
+  partition by symbol
+  measures A[0].price as a0_price,A[1].price as a1_price, A[2].price as a2_price , B.price as b_price
+ pattern (A{2,3} B)
+  define 
+	A as A.price < 150,
+	B as B.price >= 150)
+
+
 
 
 

@@ -232,6 +232,21 @@ ereignisgesteuert sind und die Interaktion durch den Austausch von Ereignissen e
 
 (Ich glaube, das brauch ich nicht mehr, da ich ja direkt aus ESPER eingehe)
 
+# SQL MATCH_RECOGNIZE
+
+* Seit Ende 2016 offizieller SQL Standard (ISO/IEC TR 19075-5:2016) (https://www.iso.org/standard/65143.html?browse=tc)
+Row Pattern Recognition in SQL
+
+* Kann in EPL eingebettet werden
+
+
+* Ereignisse werden nicht über logische Verknüpfungen und z.B. den -> Operator in Beziehung gesetzt, sondern durch Reguläre Ausdrücke
+*
+
+
+
+
+
 
 
 
