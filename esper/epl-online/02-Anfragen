@@ -77,6 +77,24 @@ match_recognize (
 
 
 
+########################### truth-bases evaluation ##########################################
+
+@Name('Out') select a,b from pattern[a=StockTick(price<100) and b=StockTick(price>20)];
+
+
+
+select * from StockTick
+match_recognize (
+  partition by symbol
+  measures A.price as a_price, B.price as b_price
+ pattern (A B)
+  define 
+	A as A.price < 100,
+	B as B.price > 20 )
+
+
+
+
 
 
  hdstueck@htwg-konstanz.de 

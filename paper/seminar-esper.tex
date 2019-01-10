@@ -31,10 +31,12 @@
 %}
 
 \usemintedstyle{}
-
+\hyphenation{
+Initiator-ereignis}
 
 \definecolor{shadecolor}{gray}{.95}
 \hyphenation{pattern}
+
 
 
 \begin{document}
@@ -82,7 +84,7 @@ in der beispielhaften Veranschaulichung dieser Systematiken anhand der Anfragesp
 Jede Aktion in der IT-gestützten Welt erzeugt 
 Informationen in Form von Daten. Dabei spielt es keine Rolle ob ein Verweis in einem 
 sozialen Netzwerk verwendet wird, ob ein Sensor einen Messwert meldet, oder jemand eine 
-Aktie kauft. Betrachtet man diese Daten, scheint der Informationsgehalt gering und die 
+Aktie kauft. Werden diese Daten betrachtet, scheint der Informationsgehalt gering und die 
 Datenmenge überschaubar. Aus diesen Grund lässt sich aus diesen Einzelinformationen kaum 
 eine nutzbringende Auskunft für ein Gesamtsystem konstruieren. In der Praxis relevante
 Fragestellungen wären zum Beispiel: Wie oft wird ein Verweis innerhalb einer Zeitspanne 
@@ -90,19 +92,21 @@ ausgelöst und zu welcher Tageszeit hauptsächlich? Wie viele Messwerte eines Se
 werden benötigt um konkrete Aussagen zu einem Messobjekt machen zu können? Wann und 
 welche Menge an Aktien eines Unternehmens werden über einen Zeitraum erworben, 
 beziehungsweise verkauft?\\
-Um diese exemplarischen Fragen zu beantworten steigt die Anzahl der benötigten Daten sehr 
-schnell an und eine Verarbeitung mit anschließender Analyse der Daten bedarf wesentlich 
-mehr Aufwand und Zeit. Möchte man zudem nicht nur historische Daten analysieren, sondern 
-möglichst ohne Zeitverzögerung eine Antwort auf aktuell erhobene Daten erhalten, dann 
+Um diese exemplarischen Fragen zu beantworten, steigt die Anzahl der benötigten Daten 
+sehr schnell an und eine Verarbeitung mit anschließender Analyse der Daten bedarf 
+wesentlich mehr Aufwand und Zeit.
+Sollen zudem nicht nur historische Daten analysiert werden, sondern 
+möglichst ohne Zeitverzögerung eine Antwort auf aktuell erhobene Daten gefunden werden, 
+dann 
 bietet sich die Technologie \textit{Complex Event Processing (CEP)} an. Mithilfe der von 
 \textit{CEP} angebotenen Verfahren lassen sich riesige und aktuellste Datenmengen nahezu 
-direkt verarbeiten. Im Gegensatz zu Datenbankmanagementsystemen, in denen man auf einer 
-endlichen Menge an Daten operiert, existieren auch für \textit{CEP} fertige 
+direkt verarbeiten. Im Gegensatz zu Datenbankmanagementsystemen, in denen auf einer 
+endlichen Menge an Daten operiert wird, existieren auch für \textit{CEP} fertige 
 Softwarelösungen zur systematischen Analyse von massiven Datenströmen. Eine dieser 
-sogenannten \textit{CEP-Engines} ist Esper, laut \cite{fraunhofer} besitzt Esper eine 
-sehr große Verbreitung, wird im kommerziellen Umfeld von Namhaften Unternehmen 
-verwendet und weist keinen Fokus auf eine spezielle Art der Verwendung auf. Esper ist 
-freie Software\footnote{General Public License v2} und steht damit der Gemeinheit für 
+\textit{CEP-Engines} ist Esper. Laut \cite{fraunhofer} besitzt Esper eine 
+sehr große Verbreitung, wird im kommerziellen Umfeld von namhaften Unternehmen 
+verwendet und weist keinen Fokus auf die Art der Verwendung auf. Esper ist 
+freie Software\footnote{General Public License v2} und steht damit der Öffentlichkeit für 
 jeden Zweck zur Verfügung.\\
 Neben der Erklärung der Esper-eigenen Abfragesprache \textit{EPL}, werden zuvor die 
 Grundlagen von \textit{Complex Event Processing} erläutert. Darunter fällt die Klärung 
@@ -156,7 +160,7 @@ generieren. Dies geschieht zum Beispiel durch Korrelation oder Gruppierung von
 Ereignissen durch zuvor definierten Regeln. Dabei kann eine Vielzahl von 
 Ereignisquellen (Abbildung \ref{img:eda-struktur}) existieren, welche fortlaufend neue 
 Ereignisse generieren. Trifft eine Regel auf eine Menge an Ereignissen zu, so wird daraus 
-ein komplexes Ereignis (\cite{glossary}) generiert, welches abermals als atomares 
+ein komplexes Ereignis (\cite{glossary}) generiert, welches abermals als 
 Ereignis für eine weitere 
 \textit{CEP}-Instanz dienen kann. Ein komplexes Ereignis wird auch verwendet
 um verschiedenartige Meldungen zu generieren, Prozesse zu initiieren oder um als 
@@ -175,13 +179,14 @@ drei Schritten Erkennen, Reagieren und Verarbeiten besteht.
 Den Beginn stellt dabei das \emph{Erkennen} dar, relevante Informationen (zum Beispiel 
 Messwerte) werden ohne Verzögerung als Ereignisse interpretiert. Während der 
 \emph{Verarbeitung} wird die Mustererkennung auf einen oder mehreren Ereignisströmen 
-durchgeführt. Sobald Muster erkannt werden, \emph{Reagiert} man mit Meldungen oder mit 
-der Generierung komplexer Ereignisse.\\
+durchgeführt. Sobald Muster erkannt werden, wird mit Meldungen oder mit 
+der Generierung komplexer Ereignisse \emph{reagiert}.\\
 Laut \cite{eckert} gibt es zwei grundlegende Arten um 
 komplexe Ereignisse zu identifizieren. Entweder über bereits bekannte Muster, die durch 
 Regeln in Ereignisanfragesprachen formuliert werden können, oder über unbekannte Muster. 
-Letztere benötigt allerdings Technologien wie \textit{MachineLearning} und 
-\textit{DataMining}, daher wird in dieser Arbeit nicht darauf eingegangen.
+Die detektierung von unbekannten Mustern benötigt allerdings Technologien wie 
+\textit{MachineLearning} und \textit{DataMining}, daher wird in dieser Arbeit nicht 
+darauf eingegangen.
 
 \subsubsection{Begriffsbestimmungen}\label{begriffsbestimmung}
 \vspace{0.1cm}
@@ -192,7 +197,7 @@ Komplexität auf und beziehen sich nur auf ein Datum (zum Beispiel den Messwert 
 Sensors oder den Kurs eines Wertpapiers.). Die Ströme sind endlos und meist 
 hochfrequent und massiv, daher können die Daten nicht persistent gespeichert werden.\\
 Jeder Datensatz in einem Datenstrom bildet ein eigenes 
-\textbf{\textit{Ereignisse}}. Im 
+\textbf{\textit{Ereigniss}}. Im 
 Allgemeinen kann laut \cite{glossary} ein Ereignis alles sein was eintreten kann, wie zum 
 Beispiel ein Erdbeben, eine Finanztransaktion, das Betätigen einer Taste oder die 
 Oktoberrevolution. Im speziellen ist ein Ereignis ein aufbereiteter Datensatz, welcher 
@@ -231,7 +236,7 @@ kann ein Ereignis folgendermaßen aufgebaut sein (\cite{hedtstuck}):
     }
 \end{table}
 Wobei die Felder \textit{Ereignistyp} und \textit{Ereignisquelle} nach \cite{bruns} 
-optional sind. Wie man an den Metainformationen erkennen kann, stehen alle Ereignisse in 
+optional sind. Wie aus den Metainformationen ersichtlich ist, stehen alle Ereignisse in 
 impliziter Beziehung zueinander.\\
 Im Verarbeitungsschritt (Abbildung \ref{img:cep-zyklus}) werden Beziehungen zwischen 
 Ereignissen gesucht, diese werden durch \textbf{\textit{Ereignismuster}} beschrieben. Die 
@@ -242,20 +247,21 @@ Operatoren der Aussagenlogik festgelegt werden, so fallen sie in die Kategorie d
 \textit{einfachen Ereignismuster}. Werden hingegen speziellere Operatoren nötig, um zum 
 Beispiel die Reihenfolge oder Zeitfenster in den Ereignisse auftreten auszudrücken, 
 gehören sie zur Kategorie der \textit{komplexen Ereignismuster}. Zur Kategorie der 
-\textit{Abstrakten Ereignismuster} gehören die Muster, welche aus einem bereits erkannten 
+\textit{abstrakten Ereignismuster} gehören die Muster, welche aus einem bereits erkannten 
 Muster komplexe Ereignisse erzeugt um diese auf einer höheren Abstraktionsebene wieder 
 zur Verfügung zu stellen.\\
-Ein \textbf{\textit{Komplexes Ereignis}} ist eine Menge von Ereignissen, die durch ein 
+Ein \textbf{\textit{komplexes Ereignis}} ist eine Menge von Ereignissen, die durch ein 
 Ereignismuster beschrieben sind.\\\label{begriff-ereignisregel}
 \textbf{\textit{Ereignisregeln}} sind die syntaktische Abstraktion von Ereignismustern 
 und werden mithilfe einer \textbf{\textit{Anfragesprache}} erstellt, laut \cite{bruns} 
 existieren für diese 
-Sprachen kein einheitlichen Standards. Daher gibt es eine Fülle an Sprachen, die aber 
-alle einige Eigenschaften Teilen. So bestehen alle in einer Anfragesprache formulierten 
-Regeln aus einer Prämisse und einem Aktionsteil, wenn das Muster, Beziehungsweise die 
+Sprachen keine einheitlichen Standards. Daher gibt es eine Fülle an Sprachen, die aber 
+alle einige Eigenschaften teilen. So bestehen in einer Anfragesprache formulierten 
+Regeln aus einer Prämisse und einem Aktionsteil, wenn das Muster, beziehungsweise die 
 Bedingung in der Prämisse erfüllt ist, wird der Aktionsteil ausgeführt. Anfragesprachen 
-sind grundsätzlich deklarativ, man beschreibt also ein Modell und muss keine Verfahren 
-zur Mustererkennung implementieren. In \cite{eckert} werden auch reaktive Regeln erwähnt, 
+sind grundsätzlich deklarativ, es wird daher ein Modell beschrieben und keine Verfahren 
+zur Mustererkennung müssen implementiert werden. In \cite{eckert} werden auch reaktive 
+Regeln erwähnt, 
 diese Regeln definieren, wie auf komplexe Ereignisse reagiert werden soll.
 
 \subsubsection{Beispielanwendungen}
@@ -300,8 +306,8 @@ Ereignissen beschreiben. In \textbf{\textit{ereignistypbasierten Mustern}} legt 
 Sequenzoperator die zeitliche Reihenfolge des Auftretens von Ereignistypen fest. Zum 
 Beispiel $A \rightarrow B$. Diese Regel akzeptiert die Ereignisfolge $c_1a_1a_2c_2b_1$. 
 Des Weiteren existieren die boolesche Operatoren $\land , \lor$, die keine Reihenfolge 
-des Auftretens beschreiben, da das Kommutativgesetz gilt: $A \circ B = B \circ A, \circ 
-\in {\lor,\land}$. Ebenso existiert die Negation: $\neg A$. Die Kombination dieser 
+des Auftretens beschreiben. Ebenso existiert die Negation: $\neg A$. Die Kombination 
+dieser 
 Operatoren ermöglicht es komplexe Muster in Ereignisfolgen zu erkennen.\\
 Eine weitere Algebra, welche von Anfragesprachen implementiert wird, ist die Algebra über 
 \textbf{\textit{Kontextbedingungen}}. Mithilfe dieser Algebra ist es möglich direkt 
@@ -319,12 +325,12 @@ $$((A\, AS\, a)) \rightarrow (B\, AS\, b)) \land (a.humidity = b.humidity)$$
 Aufgrund des endlosen Ereignisstromes, können die zuvor beschriebenen Muster nicht auf 
 die ganze Menge der Ereignisse angewendet werden, da diese weder gespeichert werden 
 können, oder nach kurzer Zeit schon nicht mehr von Interesse sind. Daher kommen 
-sogenannte \textbf{\textit{sliding windows}} zum Einsatz. Diese erlauben es nur einen 
+\textbf{\textit{sliding windows}} zum Einsatz. Diese erlauben es nur einen 
 gewisses Segment des Ereignisstromes für die Mustererkennung zu betrachten. Dabei werden 
 laut \cite{bruns} und \cite{hedtstuck} zwei Fensterarten unterschieden. Das Zeitfenster 
 berücksichtigt alle Ereignisse, die in einem zuvor festgelegtem Zeitraum eintreffen. 
-Betrachtet man hingegen eine maximale Anzahl an Ereignissen innerhalb eines 
-Ereignisstromes, dann spricht man von einem Längenfenster. Abbildung 
+Wird hingegen eine maximale Anzahl an Ereignissen innerhalb eines 
+Ereignisstromes betrachtet, wird von Längenfenstern gesprochen. Abbildung 
 \ref{img:sliding-windows} aus \cite{drools-slide} verdeutlicht diesen Mechanismus. Dabei 
 können die grauen Quader als beliebige Ereignisse oder als Ereignisse die einem 
 Ereignismuster entsprechen verstanden werden.
@@ -342,8 +348,9 @@ aussehen:
 $$(A \rightarrow B)[win:time:5min] \rightarrow C$$
 Dieses Muster ist erfolgreich, wenn innerhalb eines fünf minütigen Zeitfensters ein 
 Ereignis des Ereignistyps B auf ein Ereignis des Ereignistyps A folgt und anschließend 
-(zeitunabhängig) ein Ereignis vom Ereignistyp C eintritt.\\
-Da es möglich ist mehrere Fensterinstanzen auf einen oder mehrere Ereignisströme parallel 
+ein Ereignis vom Ereignistyp C eintritt.\\
+Da es möglich ist, mehrere Fensterinstanzen auf einen oder mehrere Ereignisströme 
+parallel 
 anzuwenden, kann mithilfe eines \textbf{Verschiebefaktors}\label{kap:verschiebefaktor}, 
 wie er in \cite{hedtstuck} beschrieben 
 ist, die Schnittmenge zweier aufeinanderfolgender Fenster angegeben werden. Dabei 
@@ -366,19 +373,20 @@ Verschiebefaktors auf aufeinanderfolgender Fensterinstanzen.
 \subsubsection{Definition von Aktionen}
 \vspace{0.1cm}
 Wird ein Ereignismuster erkannt und ist damit die Prämisse einer Ereignisregel erfüllt, 
-muss eine Aktion ausgeführt werden. Eine Aktion kann die Erstellung neuer Ereignisse 
+kann eine Aktion ausgeführt werden. Eine Aktion kann die Erstellung neuer Ereignisse 
 sein, oder das Ausführen von Diensten, beziehungsweise Versenden von Meldungen.\\
-Werden neue Ereignisse Erzeugt, so ist von der Ereignistransformation die Rede. In 
+Werden neue Ereignisse erzeugt, so ist von der Ereignistransformation die Rede. In 
 \cite{bruns} wird zwischen zwei Transformationen unterschieden. Den Transformationen, die 
 keine Informationen zu einer transformierten Ereignisfolge hinzufügen und diejenigen, die 
-dies tun. So kann im einfachsten Fall ein Ereignis eines gewissen Ereignistyps zu einem 
+dies tun. So kann im einfachsten Fall, ein Ereignis eines gewissen Ereignistyps einem 
 anderen Ereignistyp zugeordnet werden. Aktionen in Anfragesprachen erlauben auch die 
 Filterung von Ereignissen. Mit einer gefilterten Menge an relevanten Ereignissen kann 
 eine Leistungssteigerung der Musterkennung erfolgen. Zudem lässt sich eine Menge an 
 Ereignissen zu einem neuen Ereignis zusammenfassen.\\
-Darüber hinaus kann auch der Informationsgehalt von Ereignissen verändert werden, indem 
-man Daten hinzufügt oder entfernt, zum Beispiel im Zuge einer Normalisierung eines 
-Datenformats. Das generieren von komplexen Ereignissen erfolgt über Korrelation mehrerer 
+Darüber hinaus kann auch der Informationsgehalt von Ereignissen verändert werden. Zum 
+Beispiel kann im Zuge der Normalisierung eines Datenformats, Informationen hinzugefügt 
+oder entfernt werden. Das Generieren von komplexen Ereignissen erfolgt über Korrelation 
+mehrerer 
 einfacher Ereignisse, aus denen sich domänenspezifisches Wissen ableiten lässt. Als 
 Beispiel soll die Erkennung einer \textit{BruteForce}-Attacke dienen:
 \begin{align*}
@@ -404,10 +412,10 @@ Language (EPL)} zur Verfügung. Der Compiler Übersetzt \textit{EPL}-Muster in B
 die 
 \textit{Java Virtual Machine}. Esper ist ebenfalls in der Programmiersprache Java 
 implementiert, mit Nesper existiert allerdings auch eine Implementierung in C\#. Da nicht 
-auf einer endlichen Menge an Daten nach Mustern gesucht wird, lässt sich Esper eher als 
-eine invertierte Datenbank verstehen. Als erstes teilt man dem Compiler mithilfe einer 
-zuvor erstellten Konfiguration das Ereignisschema mit, um ihm anschließend ein 
-\textit{EPL}-Statement zur Übersetzung zur Verfügung zu stellen (Abbildung 
+auf einer endlichen Menge an Daten nach Mustern gesucht wird, lässt sich eher als 
+eine invertierte Datenbank verstehen. Zu Beginn wird dem Compiler, mithilfe einer 
+zuvor erstellten Konfiguration, dass Ereignisschema mitgeteilt.Im Anschluss wird ihm dann 
+ein \textit{EPL}-Statement zur Übersetzung übergeben. (Abbildung 
 \ref{java:01}). 
 
 \begin{figure}[h]    
@@ -429,7 +437,8 @@ epCompiled = c.compile("@name('statement')
 
 Die Laufzeitumgebung verwendet dann das zuvor übersetzte Statement und wendet es auf 
 einen Ereignisstrom an. Ereignisse sind in diesem Fall Objektinstanzen der Klasse 
-PersonEvent. Ein \textit{Listener} kann die zutreffenden Resultate verarbeiten. In 
+\emph{PersonEvent} (siehe Abbildung \ref{java:01}). Ein \textit{Listener} kann die 
+zutreffenden Resultate verarbeiten. In 
 diesem Beispiel (Abbildung \ref{java:02}) aus \cite{esper-reference} werden die 
 Ereignisparameter \textit{name} und \textit{age} ausgegeben.
 
@@ -463,7 +472,7 @@ public void update(EventBean[] newData,
 \end{figure}
 
 Um an die Esper-Laufzeitumgebung Ereignisse zu senden, müssen neue Ereignisinstanzen 
-Erzeugt werden und an die Laufzeitumgebung gesendet werden, wie in Abbildung \ref{java:03}
+erzeugt werden und an die Laufzeitumgebung gesendet werden, wie in Abbildung \ref{java:03}
 gezeigt
 
 \begin{figure}[h]    
@@ -546,7 +555,7 @@ alle Kurspreise der IBM-Aktie.
 
 \texttt{select  count(*),avg(price) from StockTick\\where symbol='IBM'}
 
-Die zuvor gezeigten Beispiele eignen sich nicht zur Anfrage auf einen endlosen 
+Die zuvor gezeigten Beispiele eignen sich nicht zur Anfrage auf einem endlosen 
 Ereignisstrom, da alle Ereignisse angefragt werden. Ein endgültiges Ergebnis würde ein 
 Ende des Ereignisstromes voraussetzen, daher finden im Rahmen von \textit{CEP} die in 
 Kapitel \ref{kap:ereignisregeln} beschriebenen Fenster Verwendung. Die anschließende 
@@ -616,7 +625,7 @@ verhalten sich genauso wie eine Warteschlange. Es werden nur Ereignisse innerhal
 Längenfensters betrachtet, die dem Filter hinter der \texttt{where}-Anweisung 
 entsprechen. Dabei werden durch Esper immer dann Aktionen ausgelöst, die als sogenannte 
 \textit{callbacks} an den \textit{Listener} gesendet werden, wenn ein relevantes Ereignis 
-das Fenster betritt oder verlässt. Die Folgende Tabelle \ref{table:warteschlange} 
+das Fenster betritt oder verlässt. Die folgende Tabelle \ref{table:warteschlange} 
 demonstriert dieses Vorgehen.
 
 \texttt{select avg(price) from StockTick.win:length(4)\\where symbol='IBM'}
@@ -666,7 +675,7 @@ Aufeinanderfolgende \texttt{batch}-Längenfenster überschneiden sich hingegen n
     }
 \end{table}
 
-Möchte man mehrere Bedingungen an ein Ereignis stellen, können diese mithilfe 
+Werden mehrere Bedingungen an ein Ereignis gestellt, können diese mithilfe 
 aussagenlogischer Operatoren beschrieben werden. Die sich anschließende Anfrage ermittelt 
 aus jeweils vier Datensätzen, diejenige Kursaktualisierung, die IBM betrifft und den Kurs 
 unter einen Wert von 144 fallen lässt.
@@ -676,9 +685,10 @@ price < 144}
 
 Um \textbf{ereignistypbasierte Muster} in \textit{EPL} zu verwenden, wie sie in Sektion 
 \ref{kap:ereignisregeln} erwähnt wurden, existiert das Schlüsselwort \texttt{pattern[]}. 
-Mit dessen Hilfe kann man Ereignisse auf einem endlosen Datenstrom detektieren, ohne 
-Fenster einzusetzen. Als Grundlage für die folgenden Beispiele soll der folgende, 
-angepasste Ereignisstrom dienen. Dem Ereignisstrom wurde ein neuer Ereignistyp namens 
+Mit dessen Hilfe können Ereignisse auf einem endlosen Datenstrom detektiert werden, ohne 
+das Fenster eingesetzt werden. Als Grundlage für die folgenden Beispiele soll der 
+folgende, angepasste Ereignisstrom dienen. Dem Ereignisstrom wurde ein neuer Ereignistyp 
+namens 
 \texttt{NewsTick} mit der Definition
 \texttt{create schema NewsTick(symbol string, message string);} hinzugefügt.
 \begin{verbatim}
@@ -709,11 +719,12 @@ einer unendlichen Menge eine klar über die Zeit oder Mächtigkeit definierte, e
 Untermenge betrachtet wird, kann die betrachtete Menge mithilfe des 
 \texttt{pattern[]}-Mechanismus unterschiedlich groß in Bezug auf Zeit und Mächtigkeit 
 sein. Die Handlungsweise hängt stark von der Anfrage ab und wird mit dem Begriff  
-\textit{Event Consumption} belegt. Die Verschiedenen Verfahren wurden in 
+\textit{Event Consumption} belegt. Die verschiedenen Verfahren wurden in 
 \cite{adaikkalavan} ausführlich vorgestellt und in \cite{hedtstuck} in Zusammenhang mit 
-Esper gebracht. Betrachtet man eine ereignistypbasierte Regel, die zwei Ereignistypen 
-mithilfe des schon beschriebenen Sequenzoperators in Kontext setzt 
-(\texttt{pattern[A->B]}), dann wird der Ereignistyp A als Initiator und B als Detektor 
+Esper gebracht.\\
+Betrachtet wird eine ereignistypbasierte Regel, welche zwei Ereignistypen, 
+mithilfe des schon beschriebenen Sequenzoperators, in Kontext setzt 
+(\texttt{pattern[A->B]}). Ereignistyp A wird dann als Initiator und B als Detektor 
 bezeichnet. Ein einfaches Beispiel, angewendet auf den neu eingeführten Ereignisstrom, 
 lautet folgendermaßen. Dabei soll die Yahoo-Kurskorrektur gefunden werden, die zeitlich 
 auf eine IBM-Kurskorrektur folgt.
@@ -743,8 +754,8 @@ Anfrage verdeutlicht beispielhaft die Anwendung des
 every b=StockTick(symbol='YHOO')];}
 
 Im \textit{Unrestricted Consumption Mode} wird für jedes Initiatorereignis ein eigener 
-\textit{EPA} gestartet und zudem wird jedes mögliche Detektorereignis in die 
-Eregbnismenge mit einbezogen. Die Ergebnismenge für diese Anfrage ist in Tabelle 
+\textit{EPA} gestartet, zudem wird jedes mögliche Detektorereignis in die 
+Ergebnismenge mit einbezogen. Die Ergebnismenge für diese Anfrage ist in Tabelle 
 \ref{table:unres} vereinfacht als Tupel der er Ereignisparameter \texttt{price} 
 $(a_n,b_n)$ dargestellt. 
 
@@ -905,20 +916,62 @@ Die Ergebnismenge dieser Anfrage lautet also:
 \texttt{\{symbol='YHOO', average=67.0\}}\\
 \texttt{\{symbol='IBM', average=138.83333333333334\}}
 
+\subsection{SQL Erweiterungen in EPL}
+
+Neben den reinen EPL-basierenden Ereignismustern, bietet Esper auch die Möglichkeit, 
+Muster mithilfe des SQL \emph{Match Recognize}-Mechanismus zu beschreiben. \emph{Match 
+Recognize} ist als \emph{Row Pattern Recognize} seit 2016 Bestandteil des SQL-Standards 
+\cite{sql-2016}. Im Gegenteil zur \emph{truth-value based evaluation} von EPL verwendet 
+\emph{Match Recognize} einen \emph{sequence based} Ansatz. Bei der \emph{truth-value 
+based evaluation} reicht bereits ein Ereignis, um die Bedingungen des 
+folgenden Ereignismusters zu erfüllen:
+
+\texttt{select a,b from pattern[a=StockTick(price<100)\\
+    and b=StockTick(price>20)];}
+
+Während intuitiv ein Ereignis \texttt{a}, mit einem Preis von unter 100 und ein Ereignis 
+\texttt{b}, mit einem Preis größer 20 zu erwarten wären. Tatsächlich erfüllt das Ereignis 
+\texttt{{symbol='YHOO', price=65}} das EPL-Ereignismuster. Der \emph{Match 
+Recognize}-Mechanismus benötigt zur Erfüllung eines äquivalenten Ereignismusters hingegen 
+zwei Ereignisse in vorgegebener Reihenfolge. Das nachfolgende Beispiel zeigt ein solches 
+Ereignismuster.
+
+\texttt{select * from StockTick\\
+match\_recognize (\\
+partition by symbol\\
+measures A.price as a\_price, B.price as b\_price\\
+pattern (A B)\\
+define \\
+A as A.price < 100,\\
+B as B.price > 20 )
+}
+
+Ohne präzise auf die \emph{Match Recognize}-Syntax einzugehen, sind doch einige 
+funktionale Unterschiede wichtig. Der größte Unterschied ist offensichtlich der Aufbau 
+des eigentlichen Ereignismusters (\texttt{pattern}). Während EPL Operatoren der 
+Aussagelogik, spezielle Operatoren zur Verwaltung von Fenstern und 
+ankunftsabhängige Mechanismen wie den Sequenzoperator einsetzt, werden Ereignismuster bei 
+\emph{Match Recognize} durch reguläre Ausdrücke beschrieben. EPL ist in der Lage in einem 
+Ereignismuster auf mehrere Ereignistypen zu reagieren, während die SQL-Erweiterung nur 
+einen Ereignistyp als Eingabe erlaubt. In EPL ist es 
+
+
+
+
 
 \section{Ausblick}
 \vspace{0.1cm}
 Die vorgestellten Anfragen stellen die Grundlage zur Formulierung komplexer 
 Ereignismuster dar. Welche Strategie zur Ereigniserkennung gewählt wird, hängt ganz vom 
-Szenario ab in dem das Ereignismuster zum Einsatz kommen soll. Aus diesem Grund bietet 
+Szenario ab, in dem das Ereignismuster zum Einsatz kommen soll. Aus diesem Grund bietet 
 die Sprache \textit{EPL} noch eine Vielzahl weiterer Möglichkeiten um Ereignismuster zu 
 formulieren. Zum Beispiel kann durch Auslagerung von Kontextinformationen eine Anfrage 
 übersichtlicher gestaltet werden, die Limitierung der Ausgabe kann die Leistung einer 
 Anfrage verbessern, es können Unterabfragen verwendet werden und es existieren noch 
 weitere Fenstertypen.\\
-Bevor man ein komplexeres Ereignismuster einsetzt, ist es erforderlich, diesem einer 
+Bevor man ein komplexeres Ereignismuster einsetzt, ist es erforderlich, das Muster einer 
 Leistungsbetrachtung zu unterziehen. In \cite{esper-reference} existiert ein ganzes 
-Kapitel, welches sich diesem Thema widmet. Laut \cite{eckert} eignet sich \textit{CEP} 
+Kapitel zu diesem Thema. Laut \cite{eckert} eignet sich \textit{CEP} 
 auch zur Visualisierung von Daten, ein Interessanter Ansatz könnte der in \cite{perry} 
 beschriebene sein.
 
