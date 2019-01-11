@@ -5,6 +5,7 @@
 \usepackage{graphics}
 \usepackage{float}
 \usepackage{colortbl}
+\usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{breakurl}
 \hypersetup{
@@ -125,7 +126,7 @@ Um die Mechanismen der Anfragesprache \textit{EPL} zu verstehen, muss zuvor im A
 geklärt werden, wie sich \textit{Complex Event Processing} eigentlich charakterisieren 
 lässt und wie es in das System der Datenverarbeitung eingegliedert werden kann. Darüber 
 hinaus werden in diesem Abschnitt auch grundlegende Begriffe des \textit{CEP}-Kontextes 
-geklärt. Abschnitt \ref{kap:anfragesprachen} befasst sich mit allgemein gültigen Aussagen 
+geklärt. Kapitel \ref{kap:anfragesprachen} befasst sich mit allgemein gültigen Aussagen 
 zu Anfragesprachen und stellt geläufige Anfragealgebren vor. Der sich anschließende 
 Abschnitt \ref{kap:esper} stellt die Funktionsweise von Esper aus Sicht eines Nutzers dar 
 und listet in einem kurzen Quellcodefragment, das Vorgehen um Esper in Betrieb nehmen zu 
@@ -532,18 +533,21 @@ Die Variable \texttt{t} symbolisiert dabei die vergangene Zeit zwischen dem Eint
 Ereignissen. Dabei sind \texttt{t = t+2000} und \texttt{t=t.plus(2 seconds)} äquivalente 
 Ausdrücke. 
 
-Das einfachste Muster, dass mithilfe von \textit{EPL} beschrieben werden kann, ist die 
+Das einfachste Muster, das mithilfe von \textit{EPL} beschrieben werden kann, ist die 
 Filterung aller Ereignisse.
 
 \texttt{select * from StockTick();}
 
-Einfache Bedingungen lassen sich mit \texttt{where} realisieren. Zusätzlich lässt Esper 
-noch eine weitere Schreibweise für Bedingungen zu, diese zweite Schreibweise ist 
-äquivalent zur Ersten, erhöht jedoch die Lesbarkeit in den später behandelten 
+Einfache Bedingungen lassen sich mit \texttt{where} realisieren, zur Formulierung stehen 
+folgende Relationen bereit: $=$, $<$, $>$, $>=$, $<=$, $!=$ und  \texttt{is null}, sowie 
+\texttt{is not null}. Zusätzlich lässt Esper 
+noch eine weitere Schreibweise für Bedingungen zu, diese zweite Notation ist 
+äquivalent zur ersten, erhöht jedoch die Lesbarkeit in den später behandelten 
 ereignistypbasierenden Mustern.
 
 \texttt{select * from StockTick() where price > 100;}\\
 \texttt{select * from StockTick(price > 100);}
+
 
 Eine Aggregation über alle Ereignisse kann mittels vordefinierter Funktionen erfolgen. 
 \textit{EPL} 
@@ -554,6 +558,46 @@ Die nächste Anfrage zählt die Anzahl aller Ereignisse und bildet den Durchschn
 alle Kurspreise der IBM-Aktie.
 
 \texttt{select  count(*),avg(price) from StockTick\\where symbol='IBM'}
+
+%added HAVING %%%
+
+Die Aggregationsfunktionen können nach der \texttt{select} angewendet werden, 
+nicht jedoch innerhalb einer \texttt{where} Bedingung. Um Aggregationsfunktionen auch 
+als Bestandteil einer Bedingungen zu verwenden, existiert die \texttt{having}-Klausel.
+Die \texttt{having}-Anweisung wird meistens in Zusammenhang mit der Instruktion 
+\texttt{group\_by} verwendet. Das sich anschließende Beispiel zeigt das Zusammenspiel der 
+beiden Anweisungen. Dabei wird jeweils über einen fünf Sekunden langen Zeitraum die Summe 
+der Aktienpreise , gruppiert nach ihrem \emph{symbol}, berechnet. Ein Ereignis wird nur 
+dann erzeugt, wenn die Summe einer Symbolgruppe in einem fünf Sekunden langen Intervall 
+400 
+überschreitet.
+
+\texttt{select symbol, sum(price) 
+from StockTick\#time(5 sec)\\
+group by symbol
+having sum(price) > 400}
+ 
+Das Ergebnis dieser Anfrage (Tabelle \ref{table:having-ergebnis}) auf den zuvor 
+festgelegten Ereignisstrom lautet demnach:
+
+\begin{table}[ht]
+    \caption{Bedingung mit Aggregation}
+    \label{table:having-ergebnis}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \rowcolor{shadecolor}Symbol & Summe & Rechnung \\   
+            \hline
+            IBM & 429 & 141+142+146  \\
+            IBM & 435 & 142+146+147\\
+            \hline
+\end{tabular} 
+}
+\end{table}
+
+%%%%%%%%%%%%%%%%%
+
 
 Die zuvor gezeigten Beispiele eignen sich nicht zur Anfrage auf einem endlosen 
 Ereignisstrom, da alle Ereignisse angefragt werden. Ein endgültiges Ergebnis würde ein 
@@ -904,19 +948,19 @@ Ereignis, dass zum Fenster hinzugefügt wird, das Ergebnis der Berechnung ausgib
 select symbol, avg(price)\\
 from StockTick\#groupwin(symbol)\#length\_batch(6);}
 
-Es wird also jeweils der Durchschnittspreis der letzten sechs, zu einer Firma gehörenden 
+Es wird jeweils der Durchschnittspreis der letzten sechs, zu einer Firma gehörenden 
 Aktien, berechnet und als komplexes Ereignis vom Ereignistyp \texttt{TargetEvent} in den 
 Strom eingefügt. Diese komplexen Ereignisse können ebenfalls wieder angefragt werden und 
 zur weiteren Analyse genutzt werden.
 
 \texttt{select  * from TargetEvent();} 
 
-Die Ergebnismenge dieser Anfrage lautet also:
+Die Ergebnismenge dieser Anfrage lautet:
 
 \texttt{\{symbol='YHOO', average=67.0\}}\\
 \texttt{\{symbol='IBM', average=138.83333333333334\}}
 
-\subsection{SQL Erweiterungen in EPL}
+\subsection{SQL-Erweiterungen in EPL}
 
 Neben den reinen EPL-basierenden Ereignismustern, bietet Esper auch die Möglichkeit, 
 Muster mithilfe des SQL \emph{Match Recognize}-Mechanismus zu beschreiben. \emph{Match 
@@ -953,11 +997,40 @@ Aussagelogik, spezielle Operatoren zur Verwaltung von Fenstern und
 ankunftsabhängige Mechanismen wie den Sequenzoperator einsetzt, werden Ereignismuster bei 
 \emph{Match Recognize} durch reguläre Ausdrücke beschrieben. EPL ist in der Lage in einem 
 Ereignismuster auf mehrere Ereignistypen zu reagieren, während die SQL-Erweiterung nur 
-einen Ereignistyp als Eingabe erlaubt. In EPL ist es 
+einen Ereignistyp als Eingabe erlaubt. In EPL ist es zudem möglich die Abwesenheit von 
+Ereignissen mit Hilfe des Negationsoperators festzustellen. Aufgrund des Fehlens 
+eines ähnlichen Operators in der \emph{Match Recognize}-Erweiterung von Esper, ist die 
+Suche nach ausbleibenden Ereignissen schwieriger. Tabelle \ref{table:regex} gibt einen 
+Überblick über die Operatoren um reguläre Ausdrücke mittels \emph{Match Recognize} 
+zu formulieren.
 
-
-
-
+\begin{table}[ht]
+    \caption{ReGex Operatoren}
+    \label{table:regex}\vspace{0.2cm}
+    \centering{
+        \renewcommand{\arraystretch}{1.3}
+        \begin{tabular}{|c|l|c|}
+            \hline
+            \cellcolor{shadecolor}Operator   &\cellcolor{shadecolor} Beschreibung    
+            &\cellcolor{shadecolor} Beispiel\\
+            \hline
+            $()$    & Gruppierung & (A B)\\
+             ohne   & Reihung (B folgt A) & A B\\
+            $|$   & Alternative & A $|$ B\\
+            \hline
+           \multicolumn{3}{|c|}{\cellcolor{shadecolor} Quantifier}\\
+           \hline
+           $*$      & kein oder mehrfaches Auftreten & A*\\
+           $+$      & ein oder mehrfaches Auftreten & A+\\
+           $?$      & kein oder einmaliges Auftreten & A?\\
+           $\{m,n\}$& zwischen n- und m-malig &A{3,4}\\
+           $\{n,\}$  & n-malig oder mehr & A{5,}\\
+           $\{n\}$  & genau n-maliges Auftreten& A{5}\\
+           $\{,m\}$  & kein bis m-maliges Auftreten& A{,7}\\
+            \hline   
+        \end{tabular} 
+    }
+\end{table}
 
 \section{Ausblick}
 \vspace{0.1cm}
