@@ -129,8 +129,8 @@ hinaus werden in diesem Abschnitt auch grundlegende Begriffe des \textit{CEP}-Ko
 geklärt. Kapitel \ref{kap:anfragesprachen} befasst sich mit allgemein gültigen Aussagen 
 zu Anfragesprachen und stellt geläufige Anfragealgebren vor. Der sich anschließende 
 Abschnitt \ref{kap:esper} stellt die Funktionsweise von Esper aus Sicht eines Nutzers dar 
-und listet in einem kurzen Quellcodefragment, das Vorgehen um Esper in Betrieb nehmen zu 
-können. Der ausführlichste Teil, Abschnitt \ref{kap:epl}, zeigt beispielhaft anhand eines 
+und listet in einem kurzen Quellcodefragment auf, wie Esper in Betrieb genommen werden 
+kann. Der ausführlichste Teil, Abschnitt \ref{kap:epl}, zeigt beispielhaft anhand eines 
 gegebenem Ereignisstromes, wie sich die Theorie der vorherigen Abschnitte in 
 \textit{EPL} realisieren lässt.
 
@@ -168,7 +168,7 @@ um verschiedenartige Meldungen zu generieren, Prozesse zu initiieren oder um als
 Grundlage 
 für Visualisierungen zu dienen. In \cite{bruns} wird ein Grundzyklus für 
 ereignisgesteuerte Systeme identifiziert (Abbildung \ref{img:cep-zyklus}), der aus den 
-drei Schritten Erkennen, Reagieren und Verarbeiten besteht.
+drei Schritten Erkennen, Verarbeiten und Reagieren besteht.
 
 \begin{figure}[H]
     \centering
@@ -307,9 +307,19 @@ Ereignissen beschreiben. In \textbf{\textit{ereignistypbasierten Mustern}} legt 
 Sequenzoperator die zeitliche Reihenfolge des Auftretens von Ereignistypen fest. Zum 
 Beispiel $A \rightarrow B$. Diese Regel akzeptiert die Ereignisfolge $c_1a_1a_2c_2b_1$. 
 Des Weiteren existieren die boolesche Operatoren $\land , \lor$, die keine Reihenfolge 
-des Auftretens beschreiben. Ebenso existiert die Negation: $\neg A$. Die Kombination 
-dieser 
-Operatoren ermöglicht es komplexe Muster in Ereignisfolgen zu erkennen.\\
+des Auftretens beschreiben. Ebenso existiert die Negation: $\neg A$, mit deren Hilfe 
+explizit auf das Nichteintreten eines Ereignisses geprüft werden kann. Der 
+Negationsoperator kann nur auf eine endliche Untermenge des gesamten Ereignisstromes 
+angewandt werden. Zum Beispiel innerhalb eines Fensters oder einer Sequenz, so darf im 
+folgenden Beispiel Ereignistyp $B$ nicht zeitlich zwischen einem Ereignis des Typs $A$ 
+und $C$ liegen: $A\rightarrow\lnot B\rightarrow C$. 
+Die Kombination dieser Operatoren ermöglicht es komplexe Muster in Ereignisfolgen zu 
+erkennen.Neben dem Ansatz, Mustererkennung auf Basis der Aussagenlogik durchzuführen, 
+existieren auch andere Ansätze. Der Ende 2016 verabschiedeten Standard \cite{sql-2016} 
+für die Abfragesprache SQL von relationalen Datenbanken, beschreibt Muster mithilfe von 
+regulären Ausdrücken. Eine kurze Übersicht zu dieser alternativen Möglichkeit um 
+Ereignismuster zu spezifizieren wird in Kapitel \ref{sql} behandelt.
+
 Eine weitere Algebra, welche von Anfragesprachen implementiert wird, ist die Algebra über 
 \textbf{\textit{Kontextbedingungen}}. Mithilfe dieser Algebra ist es möglich direkt 
 auf Attribute der Ereignisinstanzen über den $.$-Operator zugreifen zu können. Damit 
@@ -419,7 +429,7 @@ zuvor erstellten Konfiguration, dass Ereignisschema mitgeteilt.Im Anschluss wird
 ein \textit{EPL}-Statement zur Übersetzung übergeben. (Abbildung 
 \ref{java:01}). 
 
-\begin{figure}[h]    
+\begin{figure}[H]    
 \begin{minted}[mathescape,bgcolor=shadecolor]{java}
 EPCompiler c = EPCompilerProvider.getCompiler();
 Configuration conf = new Configuration();
@@ -443,7 +453,7 @@ zutreffenden Resultate verarbeiten. In
 diesem Beispiel (Abbildung \ref{java:02}) aus \cite{esper-reference} werden die 
 Ereignisparameter \textit{name} und \textit{age} ausgegeben.
 
-\begin{figure}[h]    
+\begin{figure}[H]    
 \begin{minted}[mathescape,bgcolor=shadecolor]{java}
 EPRuntime rt =
     EPRuntimeProvider.getDefaultRuntime(conf);
@@ -476,7 +486,7 @@ Um an die Esper-Laufzeitumgebung Ereignisse zu senden, müssen neue Ereignisinst
 erzeugt werden und an die Laufzeitumgebung gesendet werden, wie in Abbildung \ref{java:03}
 gezeigt
 
-\begin{figure}[h]    
+\begin{figure}[H]    
 \begin{minted}[mathescape,bgcolor=shadecolor]{java}
 for (int i = 0; i <= 100; i++) {
 runtime.getEventService().sendEventBean(
@@ -486,7 +496,7 @@ runtime.getEventService().sendEventBean(
 \caption{Senden von Ereignissen}
 \label{java:03}
 \end{figure}
-\newpage
+
 \subsection{Die Anfragesprache EPL}\label{kap:epl}
 \vspace{0.1cm}
 Die \textit{Event Processing Language} von Esper ist stark an \textit{SQL} angelehnt, 
@@ -960,7 +970,7 @@ Die Ergebnismenge dieser Anfrage lautet:
 \texttt{\{symbol='YHOO', average=67.0\}}\\
 \texttt{\{symbol='IBM', average=138.83333333333334\}}
 
-\subsection{SQL-Erweiterungen in EPL}
+\subsection{SQL-Erweiterungen in EPL}\label{sql}
 
 Neben den reinen EPL-basierenden Ereignismustern, bietet Esper auch die Möglichkeit, 
 Muster mithilfe des SQL \emph{Match Recognize}-Mechanismus zu beschreiben. \emph{Match 
@@ -993,7 +1003,7 @@ B as B.price > 20 )
 Ohne präzise auf die \emph{Match Recognize}-Syntax einzugehen, sind doch einige 
 funktionale Unterschiede wichtig. Der größte Unterschied ist offensichtlich der Aufbau 
 des eigentlichen Ereignismusters (\texttt{pattern}). Während EPL Operatoren der 
-Aussagelogik, spezielle Operatoren zur Verwaltung von Fenstern und 
+Aussagenlogik, spezielle Operatoren zur Verwaltung von Fenstern und 
 ankunftsabhängige Mechanismen wie den Sequenzoperator einsetzt, werden Ereignismuster bei 
 \emph{Match Recognize} durch reguläre Ausdrücke beschrieben. EPL ist in der Lage in einem 
 Ereignismuster auf mehrere Ereignistypen zu reagieren, während die SQL-Erweiterung nur 
