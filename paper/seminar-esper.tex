@@ -179,9 +179,9 @@ drei Schritten Erkennen, Verarbeiten und Reagieren besteht.
 
 Den Beginn stellt dabei das \emph{Erkennen} dar, relevante Informationen (zum Beispiel 
 Messwerte) werden ohne Verzögerung als Ereignisse interpretiert. Während der 
-\emph{Verarbeitung} wird die Mustererkennung auf einen oder mehreren Ereignisströmen 
+\emph{Verarbeitung} wird die Mustererkennung auf einem oder mehreren Ereignisströmen 
 durchgeführt. Sobald Muster erkannt werden, wird mit Meldungen oder mit 
-der Generierung komplexer Ereignisse \emph{reagiert}.\\
+der Generierung komplexer Ereignisse reagiert.\\
 Laut \cite{eckert} gibt es zwei grundlegende Arten um 
 komplexe Ereignisse zu identifizieren. Entweder über bereits bekannte Muster, die durch 
 Regeln in Ereignisanfragesprachen formuliert werden können, oder über unbekannte Muster. 
@@ -227,7 +227,7 @@ kann ein Ereignis folgendermaßen aufgebaut sein (\cite{hedtstuck}):
             \hline
             \multicolumn{2}{|l|}{\cellcolor{shadecolor}\textbf{Kontextinformation}}\\     
             \hline
-            \multicolumn{2}{|l|}{\texttt{Name: ACME GmbH}}\\
+            \multicolumn{2}{|l|}{\texttt{Name: GCME AG}}\\
             \multicolumn{2}{|l|}{\texttt{Einkaufkurs: 32.5}}\\
             \multicolumn{2}{|l|}{\texttt{Letzter Kurs: 40.8}}\\
             \multicolumn{2}{|l|}{\texttt{Differenzbetrag: 5.7}}\\
@@ -571,16 +571,15 @@ alle Kurspreise der IBM-Aktie.
 
 %added HAVING %%%
 
-Die Aggregationsfunktionen können nach der \texttt{select} angewendet werden, 
+Die Aggregationsfunktionen können nach \texttt{select} angewendet werden, 
 nicht jedoch innerhalb einer \texttt{where} Bedingung. Um Aggregationsfunktionen auch 
 als Bestandteil einer Bedingungen zu verwenden, existiert die \texttt{having}-Klausel.
 Die \texttt{having}-Anweisung wird meistens in Zusammenhang mit der Instruktion 
 \texttt{group\_by} verwendet. Das sich anschließende Beispiel zeigt das Zusammenspiel der 
 beiden Anweisungen. Dabei wird jeweils über einen fünf Sekunden langen Zeitraum die Summe 
-der Aktienpreise , gruppiert nach ihrem \emph{symbol}, berechnet. Ein Ereignis wird nur 
+der Aktienpreise, gruppiert nach ihrem \emph{symbol}, berechnet. Ein Ereignis wird nur 
 dann erzeugt, wenn die Summe einer Symbolgruppe in einem fünf Sekunden langen Intervall 
-400 
-überschreitet.
+400 überschreitet.
 
 \texttt{select symbol, sum(price) 
 from StockTick\#time(5 sec)\\
@@ -948,11 +947,7 @@ eingeführt: \texttt{create schema TargetEvent(symbol string, average\\ double);
 Die sich anschließende Anfrage verwendet zusätzlich zur \texttt{intert into}-Anweisung, 
 auch noch sogenannte Gruppenfenster. Durch diese Fenster wird die Anfrage deutlich 
 übersichtlicher, für jede Bedingung die dem Schlüsselwort \texttt{groupwin(CONDITION)} 
-mitgeteilt wird, wird eine separate Längen- oder Zeitfensterinstanz gestartet. Außerdem 
-wird die \texttt{group by}-Anweisung mit einer Bedingung übergeben. Das ist notwendig, da 
-die Aggregationsfunktion für die Durchschnittsberechnung \texttt{avg()} für jedes 
-Ereignis, dass zum Fenster hinzugefügt wird, das Ergebnis der Berechnung ausgibt. 
-\texttt{group by} fasst alle gleichen Ergebnisse zusammen.
+mitgeteilt wird, wird eine separate Längen- oder Zeitfensterinstanz gestartet.
 
 \texttt{insert into TargetEvent(symbol, average)\\
 select symbol, avg(price)\\
@@ -983,8 +978,8 @@ folgenden Ereignismusters zu erfüllen:
 \texttt{select a,b from pattern[a=StockTick(price<100)\\
     and b=StockTick(price>20)];}
 
-Während intuitiv ein Ereignis \texttt{a}, mit einem Preis von unter 100 und ein Ereignis 
-\texttt{b}, mit einem Preis größer 20 zu erwarten wären. Tatsächlich erfüllt das Ereignis 
+Intuitiv ist ein Ereignis \texttt{a}, mit einem Preis von unter 100 und ein Ereignis 
+\texttt{b}, mit einem Preis größer 20 zu erwarten. Tatsächlich erfüllt das Ereignis 
 \texttt{{symbol='YHOO', price=65}} das EPL-Ereignismuster. Der \emph{Match 
 Recognize}-Mechanismus benötigt zur Erfüllung eines äquivalenten Ereignismusters hingegen 
 zwei Ereignisse in vorgegebener Reihenfolge. Das nachfolgende Beispiel zeigt ein solches 
