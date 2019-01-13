@@ -978,12 +978,12 @@ folgenden Ereignismusters zu erfüllen:
 \texttt{select a,b from pattern[a=StockTick(price<100)\\
     and b=StockTick(price>20)];}
 
-Intuitiv ist ein Ereignis \texttt{a}, mit einem Preis von unter 100 und ein Ereignis 
-\texttt{b}, mit einem Preis größer 20 zu erwarten. Tatsächlich erfüllt das Ereignis 
-\texttt{{symbol='YHOO', price=65}} das EPL-Ereignismuster. Der \emph{Match 
-Recognize}-Mechanismus benötigt zur Erfüllung eines äquivalenten Ereignismusters hingegen 
-zwei Ereignisse in vorgegebener Reihenfolge. Das nachfolgende Beispiel zeigt ein solches 
-Ereignismuster.
+Um das Muster zu erfüllen ist intuitiv ein Ereignis \texttt{a}, mit einem Preis von unter 
+100 und ein Ereignis \texttt{b}, mit einem Preis größer 20 zu erwarten. Tatsächlich 
+erfüllt das Ereignis \texttt{{symbol='YHOO', price=65}} das EPL-Ereignismuster. Der 
+\emph{Match Recognize}-Mechanismus benötigt zur Erfüllung eines äquivalenten 
+Ereignismusters hingegen zwei Ereignisse in vorgegebener Reihenfolge. Das nachfolgende 
+Beispiel zeigt ein solches Ereignismuster.
 
 \texttt{select * from StockTick\\
 match\_recognize (\\
