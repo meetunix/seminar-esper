@@ -323,7 +323,7 @@ Ereignismuster zu spezifizieren wird in Kapitel \ref{sql} behandelt.
 Eine weitere Algebra, welche von Anfragesprachen implementiert wird, ist die Algebra über 
 \textbf{\textit{Kontextbedingungen}}. Mithilfe dieser Algebra ist es möglich direkt 
 auf Attribute der Ereignisinstanzen über den $.$-Operator zugreifen zu können. Damit 
-besteht die Möglichkeit die Attribute in Relation zu setzen und Rechenvorschriften zu 
+besteht die Möglichkeit, die Attribute in Relation zu setzen und Rechenvorschriften zu 
 definieren. Zur Verfügung stehen dabei die numerischen Operatoren und 
 Vergleichsoperatoren, aber auch Operatoren für Zeichenketten sind denkbar, oder gesondert 
 definierte Methoden. Um in dieser Algebra verschiedene Entitäten von Ereignistypen zu 
@@ -336,7 +336,7 @@ $$((A\, AS\, a)) \rightarrow (B\, AS\, b)) \land (a.humidity = b.humidity)$$
 Aufgrund des endlosen Ereignisstromes, können die zuvor beschriebenen Muster nicht auf 
 die ganze Menge der Ereignisse angewendet werden, da diese weder gespeichert werden 
 können, oder nach kurzer Zeit schon nicht mehr von Interesse sind. Daher kommen 
-\textbf{\textit{sliding windows}} zum Einsatz. Diese erlauben es nur einen 
+\textbf{\textit{sliding windows}} zum Einsatz. Diese erlauben es, nur einen 
 gewisses Segment des Ereignisstromes für die Mustererkennung zu betrachten. Dabei werden 
 laut \cite{bruns} und \cite{hedtstuck} zwei Fensterarten unterschieden. Das Zeitfenster 
 berücksichtigt alle Ereignisse, die in einem zuvor festgelegtem Zeitraum eintreffen. 
@@ -369,10 +369,10 @@ unterscheidet \cite{hedtstuck} nochmals in die \textit{Rolling Windows}, bei den
 Verschiebefaktor kleiner als die Länge des Fensters ist und zwei aufeinanderfolgende 
 Fenster somit eine Schnittmenge besitzen und \textit{Tumbling Windows}, deren 
 Verschiebefaktor größer oder gleich der Fensterlänge ist. Aufeinanderfolgende 
-\textit{Tumbling Windows} sind zueinander Disjunkt und ist der Verschiebefaktor größer 
+\textit{Tumbling Windows} sind zueinander Disjunkt, ist der Verschiebefaktor größer 
 als die Fensterlänge, befinden sich zwischen ihnen nicht betrachtete Ereignisse. 
 Abbildung \ref{img:factors} aus \cite{hedtstuck} zeigt den Einfluss des 
-Verschiebefaktors auf aufeinanderfolgender Fensterinstanzen.
+Verschiebefaktors auf aufeinanderfolgende Fensterinstanzen.
 
 \begin{figure}[H]
     \centering
@@ -389,13 +389,13 @@ sein, oder das Ausführen von Diensten, beziehungsweise Versenden von Meldungen.
 Werden neue Ereignisse erzeugt, so ist von der Ereignistransformation die Rede. In 
 \cite{bruns} wird zwischen zwei Transformationen unterschieden. Den Transformationen, die 
 keine Informationen zu einer transformierten Ereignisfolge hinzufügen und diejenigen, die 
-dies tun. So kann im einfachsten Fall, ein Ereignis eines gewissen Ereignistyps einem 
+dies tun. So kann im einfachsten Fall ein Ereignis eines gewissen Ereignistyps einem 
 anderen Ereignistyp zugeordnet werden. Aktionen in Anfragesprachen erlauben auch die 
 Filterung von Ereignissen. Mit einer gefilterten Menge an relevanten Ereignissen kann 
 eine Leistungssteigerung der Musterkennung erfolgen. Zudem lässt sich eine Menge an 
 Ereignissen zu einem neuen Ereignis zusammenfassen.\\
 Darüber hinaus kann auch der Informationsgehalt von Ereignissen verändert werden. Zum 
-Beispiel kann im Zuge der Normalisierung eines Datenformats, Informationen hinzugefügt 
+Beispiel kann im Zuge der Normalisierung eines Datenformats, eine Information hinzugefügt 
 oder entfernt werden. Das Generieren von komplexen Ereignissen erfolgt über Korrelation 
 mehrerer 
 einfacher Ereignisse, aus denen sich domänenspezifisches Wissen ableiten lässt. Als 
@@ -423,10 +423,10 @@ Language (EPL)} zur Verfügung. Der Compiler Übersetzt \textit{EPL}-Muster in B
 die 
 \textit{Java Virtual Machine}. Esper ist ebenfalls in der Programmiersprache Java 
 implementiert, mit Nesper existiert allerdings auch eine Implementierung in C\#. Da nicht 
-auf einer endlichen Menge an Daten nach Mustern gesucht wird, lässt sich eher als 
+auf einer endlichen Menge an Daten nach Mustern gesucht wird, lässt Esper sich eher als 
 eine invertierte Datenbank verstehen. Zu Beginn wird dem Compiler, mithilfe einer 
-zuvor erstellten Konfiguration, dass Ereignisschema mitgeteilt.Im Anschluss wird ihm dann 
-ein \textit{EPL}-Statement zur Übersetzung übergeben. (Abbildung 
+zuvor erstellten Konfiguration, dass Ereignisschema mitgeteilt. Im Anschluss wird ihm 
+dann ein \textit{EPL}-Statement zur Übersetzung übergeben. (Abbildung 
 \ref{java:01}). 
 
 \begin{figure}[H]    
@@ -483,7 +483,7 @@ public void update(EventBean[] newData,
 \end{figure}
 
 Um an die Esper-Laufzeitumgebung Ereignisse zu senden, müssen neue Ereignisinstanzen 
-erzeugt werden und an die Laufzeitumgebung gesendet werden, wie in Abbildung \ref{java:03}
+erzeugt und an die Laufzeitumgebung gesendet werden, wie in Abbildung \ref{java:03}
 gezeigt
 
 \begin{figure}[H]    
