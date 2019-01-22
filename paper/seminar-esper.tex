@@ -71,7 +71,7 @@ Möglichkeit diese Ereignisse annähernd in Echtzeit zu analysieren und zu korre
 neues Wissen zu erzeugen und auf Basis dieser neuen Erkenntnisse zu reagieren. Die 
 vorliegende Arbeit bietet eine kompakte Einführung in das Thema \textit{Complex Event 
 Processing} und deren zugrunde liegenden Anfragesystematiken. Hauptaugenmerk liegt jedoch 
-in der beispielhaften Veranschaulichung dieser Systematiken anhand der Anfragesprache 
+in der exemplarischen Veranschaulichung dieser Systematiken anhand der Anfragesprache 
 \textit{EPL} der \textit{CEP}-Software Esper.
 
 \end{abstract}
@@ -130,14 +130,14 @@ geklärt. Kapitel \ref{kap:anfragesprachen} befasst sich mit allgemein gültigen
 zu Anfragesprachen und stellt geläufige Anfragealgebren vor. Der sich anschließende 
 Abschnitt \ref{kap:esper} stellt die Funktionsweise von Esper aus Sicht eines Nutzers dar 
 und listet in einem kurzen Quellcodefragment auf, wie Esper in Betrieb genommen werden 
-kann. Der ausführlichste Teil, Abschnitt \ref{kap:epl}, zeigt beispielhaft anhand eines 
+kann. Der ausführlichste Teil, Abschnitt \ref{kap:epl}, zeigt exemplarisch anhand eines 
 gegebenem Ereignisstromes, wie sich die Theorie der vorherigen Abschnitte in 
 \textit{EPL} realisieren lässt.
 
-
+\newpage
 \subsection{Einordnung von CEP}\label{kap:einordnung}
 \vspace{0.1cm}
-\textit{CEP} kann als Bestandteil von \textit{Event-Driven Architecture (EDA)} verstanden 
+\textit{CEP} kann als Bestandteil der \textit{Event-Driven Architecture (EDA)} verstanden 
 werden. \textit{EDA} unterscheidet sich als Architekturstil 
 grundlegend von anderen Stilen, so findet in \textit{EDA} keine schrittweise Abarbeitung 
 von vorher definierten Anweisungen statt um Daten zu verarbeiten. Wie in \cite{glossary} 
@@ -208,7 +208,7 @@ Kontextinformationen) auch eindeutige und strukturierte Metadaten erfasst werden
 Exemplarisch 
 kann ein Ereignis folgendermaßen aufgebaut sein (\cite{hedtstuck}):
 
-\begin{table}[ht]
+\begin{table}[H]
     \caption{Ereignisaufbau}
     \label{table:ereignis}\vspace{0.2cm}
     \centering{
@@ -260,8 +260,8 @@ Sprachen keine einheitlichen Standards. Daher gibt es eine Fülle an Sprachen, d
 alle einige Eigenschaften teilen. So bestehen in einer Anfragesprache formulierten 
 Regeln aus einer Prämisse und einem Aktionsteil, wenn das Muster, beziehungsweise die 
 Bedingung in der Prämisse erfüllt ist, wird der Aktionsteil ausgeführt. Anfragesprachen 
-sind grundsätzlich deklarativ, es wird daher ein Modell beschrieben und keine Verfahren 
-zur Mustererkennung müssen implementiert werden. In \cite{eckert} werden auch reaktive 
+sind grundsätzlich deklarativ, es wird daher ein Modell beschrieben, demnach müssen keine 
+Verfahren zur Mustererkennung implementiert werden. In \cite{eckert} werden auch reaktive 
 Regeln erwähnt, 
 diese Regeln definieren, wie auf komplexe Ereignisse reagiert werden soll.
 
@@ -353,7 +353,7 @@ Ereignismuster entsprechen verstanden werden.
     \label{img:sliding-windows}
 \end{figure}
 
-Eine beispielhafte Ereignisregel mithilfe von \textit{sliding windows} könnte 
+Eine exemplarische Ereignisregel mithilfe von \textit{sliding windows} könnte 
 folgendermaßen 
 aussehen:
 $$(A \rightarrow B)[win:time:5min] \rightarrow C$$
@@ -501,7 +501,8 @@ runtime.getEventService().sendEventBean(
 \vspace{0.1cm}
 Die \textit{Event Processing Language} von Esper ist stark an \textit{SQL} angelehnt, 
 bietet aber Erweiterungen für die Verarbeitung von Ereignissen in einem endlosen 
-Ereignisstrom. Ähnlich wie bei SQL ist ein Statement folgendermaßen aufgebaut:
+Ereignisstrom. Ähnlich wie bei SQL ist ein Statement 
+folgendermaßen aufgebaut:
 
 \texttt{select DATENAUSWAHL from EREIGNISSTROM where FILTER}
 
@@ -543,6 +544,7 @@ Die Variable \texttt{t} symbolisiert dabei die vergangene Zeit zwischen dem Eint
 Ereignissen. Dabei sind \texttt{t = t+2000} und \texttt{t=t.plus(2 seconds)} äquivalente 
 Ausdrücke. 
 
+\newpage
 Das einfachste Muster, das mithilfe von \textit{EPL} beschrieben werden kann, ist die 
 Filterung aller Ereignisse.
 
@@ -552,14 +554,15 @@ Einfache Bedingungen lassen sich mit \texttt{where} realisieren, zur Formulierun
 folgende Relationen bereit: $=$, $<$, $>$, $>=$, $<=$, $!=$ und  \texttt{is null}, sowie 
 \texttt{is not null}. Zusätzlich lässt Esper 
 noch eine weitere Schreibweise für Bedingungen zu, diese zweite Notation ist 
-äquivalent zur ersten, erhöht jedoch die Lesbarkeit in den später behandelten 
+innerhalb der äquivalent zur ersten, erhöht jedoch die 
+Lesbarkeit in den später behandelten 
 ereignistypbasierenden Mustern.
 
 \texttt{select * from StockTick() where price > 100;}\\
 \texttt{select * from StockTick(price > 100);}
 
 
-Eine Aggregation über alle Ereignisse kann mittels vordefinierter Funktionen erfolgen. 
+Eine Aggregation über alle Ereignisse kann mittels vordefinierter Funktionen erfolgen. In
 \textit{EPL} 
 stehen neben den einfachen Funktionen wie \texttt{avg(), count(), sum()} auch 
 statistische Methoden zur Verfügung (siehe Tabelle 10.5 in \cite{esper-reference}).
@@ -613,7 +616,7 @@ Ereignisstrom, da alle Ereignisse angefragt werden. Ein endgültiges Ergebnis w�
 Ende des Ereignisstromes voraussetzen, daher finden im Rahmen von \textit{CEP} die in 
 Kapitel \ref{kap:ereignisregeln} beschriebenen Fenster Verwendung. Die anschließende 
 EPL-Anfrage setzt ein auf Zeit basierendes \textit{sliding window} ein und berechnet den 
-Durchschnittspreis der IBM-Aktie der letzten 6 Sekunden:
+Durchschnittspreis der IBM-Aktie der letzten 6 Sekunden:\\
 
 \texttt{select  avg(price) from StockTick.win:time(6 sec)\\where symbol='IBM'}
 
@@ -648,7 +651,7 @@ Dabei wird sich auf den oben eingeführten Ereignisstrom und die letzte Anfrage 
     }
 \end{table}
 
-Da dieses Vorgehen wenig intuitiv erscheint existieren in \textit{EPL} auch Längen- und 
+Da dieses Vorgehen wenig intuitiv erscheint, existieren in \textit{EPL} auch Längen- und 
 Zeitfenster mit einem fixen Verschiebefaktor. Die sogenannten \texttt{batch}-Fenster sind 
 \textit{Tumbling Windows}, deren Verschiebefaktor der Länge des jeweiligen Fensters 
 entspricht. Die gleiche Anfrage mithilfe eines \texttt{batch}-Fensters verhält sich 
@@ -683,7 +686,7 @@ demonstriert dieses Vorgehen.
 
 \texttt{select avg(price) from StockTick.win:length(4)\\where symbol='IBM'}
 
-\begin{table}[ht]
+\begin{table}[H]
     \caption{Längenfenster}
     \label{table:warteschlange}\vspace{0.2cm}
     \centering{
@@ -800,7 +803,7 @@ Aus dieser Darstellung heraus ist erkennbar, dass in diesem Beispiel lediglich e
 \textit{EPA} gestartet wurde. Zudem geht aus dem Ereignisstrom hervor, dass dieses Muster 
 noch auf weitere Ereignisse zutreffen könnte. Um Esper anzuweisen zusätzliche 
 \textit{EPA} zu starten muss der Operator \texttt{every} eingesetzt werden. Die folgende 
-Anfrage verdeutlicht beispielhaft die Anwendung des 
+Anfrage verdeutlicht exemplarisch die Anwendung des 
 \textit{Unrestricted Consumption Mode} in EPL.
 
 \texttt{select a.price,b,price from\\pattern[every a=StockTick(symbol='IBM') ->\\
@@ -897,7 +900,7 @@ beendet. Im Anschluss wird nach einem weiteren Initiatorereignis gesucht und ein
 Initiatorereignis, ohne vorher auf ein Detektorereignis gestoßen zu sein, wird dieses
 Initiatorereignis überlesen und erst mit dem Auffinden eines Detektorereignisses beendet. 
 Dieser Vorgang führt bei nachfolgender Anfrage zu dem Ergebnis in Tabelle 
-\ref{table:recent}.
+\ref{table:recent}.\\\\
 
 \texttt{\texttt{select a.price,b.price from\\pattern[every (a=StockTick(symbol='IBM') ->\\
         b=StockTick(symbol='YHOO'))];}}
@@ -927,7 +930,8 @@ Alle zuvor beschriebenen Beispiele können auch mit Fenstern kombiniert werden. 
 Hilfe lassen sich zum Beispiel Untersuchungszeiträume festlegen. Auch der Speicherbedarf 
 kann durch eine Zeit- oder Längenlimitierung begrenzt werden. Die sich anschließende 
 Anfrage soll als komplexeres Beispiel dienen. Es soll untersucht werden, ob eine negative 
-Nachrichtenmeldung den Aktienkurs der IBM-AKtie nachteilig beeinflusst.
+Nachrichtenmeldung den Aktienkurs der IBM-Aktie nachteilig beeinfluss\emph{einfachen 
+Ereignismuster}t.
 
 \texttt{select c from pattern[a=StockTick(symbol='IBM') ->\\
     b=NewsTick(symbol='IBM' and message='bad') ->\\
@@ -935,8 +939,8 @@ Nachrichtenmeldung den Aktienkurs der IBM-AKtie nachteilig beeinflusst.
 
 In diesem Beispiel wird neben einer kontextabhängigen Bedingung (\texttt{price < 
 a.price}), welche den Preis des zweiten Detektorereignisses mit dem Preis des 
-Initiatorereignisses vergleicht. Das eingesetzte Zeitfenster schränkt den zu 
-betrachtenden Zeitraum zusätzlich auf fünf Minuten ein.
+Initiatorereignisses vergleicht auch ein Zeitfenster eingesetzt, welches den zu 
+betrachtenden Zeitraum auf 5 Minuten einschränkt.
 
 Um \textbf{komplexe Ereignisse} zu erzeugen ist es notwendig neue Ereignisse in den 
 gleichen oder einem anderen Ereignisstrom einzufügen. Für diesen Zweck bietet 
@@ -959,14 +963,14 @@ Strom eingefügt. Diese komplexen Ereignisse können ebenfalls wieder angefragt 
 zur weiteren Analyse genutzt werden.
 
 \texttt{select  * from TargetEvent();} 
-
+\newpage
 Die Ergebnismenge dieser Anfrage lautet:
 
 \texttt{\{symbol='YHOO', average=67.0\}}\\
 \texttt{\{symbol='IBM', average=138.83333333333334\}}
 
 \subsection{SQL-Erweiterungen in EPL}\label{sql}
-
+\vspace{0.1cm}
 Neben den reinen EPL-basierenden Ereignismustern, bietet Esper auch die Möglichkeit, 
 Muster mithilfe des SQL \emph{Match Recognize}-Mechanismus zu beschreiben. \emph{Match 
 Recognize} ist als \emph{Row Pattern Recognize} seit 2016 Bestandteil des SQL-Standards 
@@ -1009,7 +1013,7 @@ Suche nach ausbleibenden Ereignissen schwieriger. Tabelle \ref{table:regex} gibt
 Überblick über die Operatoren um reguläre Ausdrücke mittels \emph{Match Recognize} 
 zu formulieren.
 
-\begin{table}[ht]
+\begin{table}[H]
     \caption{ReGex Operatoren}
     \label{table:regex}\vspace{0.2cm}
     \centering{
@@ -1053,7 +1057,7 @@ Kapitel zu diesem Thema. Laut \cite{eckert} eignet sich \textit{CEP}
 auch zur Visualisierung von Daten, ein Interessanter Ansatz könnte der in \cite{perry} 
 beschriebene sein.
 
-
+\newpage
 \appendix
 \vspace{0.1cm}
 %
